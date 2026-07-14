@@ -1,0 +1,695 @@
+{
+  "defaults": {
+    "jira": {
+      "site": "https://celonis.atlassian.net",
+      "api_version": "3",
+      "done_statuses": [
+        "Done",
+        "Closed"
+      ],
+      "type_map": {
+        "bug": [
+          "Bug"
+        ],
+        "feature": [
+          "Story",
+          "Epic"
+        ],
+        "task": [
+          "Task",
+          "Sub-task"
+        ]
+      },
+      "slice_by": "component",
+      "noise_filter": {
+        "enabled": true,
+        "exclude_resolutions": [
+          "Duplicate",
+          "Won't Do",
+          "Cannot Reproduce",
+          "Invalid"
+        ],
+        "exclude_labels": [],
+        "exclude_reporters": []
+      },
+      "security_filter": {
+        "enabled": true,
+        "security_project_keys": [
+          "CBE"
+        ],
+        "issue_types": [
+          "Vulnerability"
+        ],
+        "required_fields": [
+          "Vulnerability Detected Date and Time",
+          "Type of Vulnerability"
+        ],
+        "required_fields_mode": "any",
+        "severity_field": "Risk Rating",
+        "severity_levels": [
+          "Critical",
+          "High",
+          "Moderate",
+          "Low"
+        ],
+        "aging_field": "Vulnerability Detected Date and Time",
+        "sla_critical_days": 14,
+        "sla_high_days": 30,
+        "product_scope_field": [
+          "Product Assets",
+          "Service Assets",
+          "Squad Assets"
+        ],
+        "security_slice_by": "Service internal"
+      },
+      "customer_filter": {
+        "enabled": true,
+        "project_keys": [
+          "CBE"
+        ],
+        "exclude_issue_types": [
+          "Vulnerability"
+        ],
+        "severity_field": "priority",
+        "severity_levels": [
+          "Highest",
+          "High",
+          "Medium",
+          "Low"
+        ],
+        "sla_p1_days": 3,
+        "sla_p2_days": 14,
+        "product_scope_field": [
+          "Product Assets",
+          "Service Assets",
+          "Squad Assets"
+        ],
+        "slice_by": "Service internal"
+      }
+    }
+  },
+  "projects": [
+    {
+      "key": "TMT",
+      "name": "Task Mining",
+      "size_tier": "L",
+      "enabled": false,
+      "services": [
+        {
+          "name": "TM AI Service",
+          "jira_scope": "TM AI Service",
+          "security_scope": "tm-ai-service"
+        },
+        {
+          "name": "TM Chrome Extension",
+          "jira_scope": "TM Chrome Extension",
+          "security_scope": "tm-chrome-extension"
+        },
+        {
+          "name": "TM Client",
+          "jira_scope": "TM Client",
+          "security_scope": "tm-client"
+        },
+        {
+          "name": "TM Cloud Frontend",
+          "jira_scope": "TM Cloud Frontend",
+          "security_scope": "tm-cloud-frontend"
+        },
+        {
+          "name": "TM Cloud Service",
+          "jira_scope": "TM Cloud Service",
+          "security_scope": "tm-cloud-service"
+        },
+        {
+          "name": "TM Config Editor",
+          "jira_scope": "TM Config Editor",
+          "security_scope": "tm-config-editor"
+        },
+        {
+          "name": "TM EMS",
+          "jira_scope": "TM EMS",
+          "security_scope": "tm-ems"
+        },
+        {
+          "name": "TM Gateway",
+          "jira_scope": "TM Gateway",
+          "security_scope": "tm-gateway"
+        },
+        {
+          "name": "TM ML jobs",
+          "jira_scope": "TM ML jobs",
+          "security_scope": "tm-ml-jobs"
+        },
+        {
+          "name": "TM ML Workbench",
+          "jira_scope": "TM ML Workbench",
+          "security_scope": "tm-ml-workbench"
+        },
+        {
+          "name": "TM Monitors and SLOs",
+          "jira_scope": "TM Monitors and SLOs",
+          "security_scope": "tm-monitors-and-slos"
+        },
+        {
+          "name": "TM PDD Export",
+          "jira_scope": "TM PDD Export",
+          "security_scope": "tm-pdd-export"
+        },
+        {
+          "name": "TM SQL scripts",
+          "jira_scope": "TM SQL scripts",
+          "security_scope": "tm-sql-scripts"
+        },
+        {
+          "name": "TM Studio",
+          "jira_scope": "TM Studio",
+          "security_scope": "tm-studio"
+        },
+        {
+          "name": "TM Uploader",
+          "jira_scope": "TM Uploader",
+          "security_scope": "tm-uploader"
+        },
+        {
+          "name": "TM Uploader Java",
+          "jira_scope": "TM Uploader Java",
+          "security_scope": "tm-uploader-java"
+        }
+      ],
+      "product_scope_value": "task-mining",
+      "unmatched_cbe_scopes": [
+        {
+          "name": "Task Mining Gateway",
+          "security_scope": "task-mining-gateway"
+        },
+        {
+          "name": "Task Mining Client",
+          "security_scope": "task-mining-client"
+        },
+        {
+          "name": "Task Mining Chrome Extension",
+          "security_scope": "task-mining-chrome-extension"
+        },
+        {
+          "name": "Task Mining Ai",
+          "security_scope": "task-mining-ai"
+        },
+        {
+          "name": "Task Mining Uploader",
+          "security_scope": "task-mining-uploader"
+        },
+        {
+          "name": "Tm Image Collector",
+          "security_scope": "tm-image-collector"
+        },
+        {
+          "name": "Cloud Task Mining",
+          "security_scope": "cloud-task-mining"
+        }
+      ]
+    },
+    {
+      "key": "DSE",
+      "name": "DSE",
+      "size_tier": "M",
+      "enabled": false,
+      "services": [],
+      "product_scope_value": "DSE"
+    },
+    {
+      "jira": {
+        "site": "https://celonis.atlassian.net",
+        "api_version": "3",
+        "done_statuses": [
+          "Done",
+          "Closed"
+        ],
+        "type_map": {
+          "bug": [
+            "Bug"
+          ],
+          "feature": [
+            "Story",
+            "Epic"
+          ],
+          "task": [
+            "Task",
+            "Sub-task"
+          ]
+        },
+        "slice_by": "component",
+        "noise_filter": {
+          "enabled": true,
+          "exclude_resolutions": [
+            "Duplicate",
+            "Won't Do",
+            "Cannot Reproduce",
+            "Invalid"
+          ],
+          "exclude_labels": [],
+          "exclude_reporters": []
+        },
+        "security_filter": {
+          "enabled": true,
+          "security_project_keys": [
+            "CBE"
+          ],
+          "issue_types": [
+            "Vulnerability"
+          ],
+          "required_fields": [
+            "Vulnerability Detected Date and Time",
+            "Type of Vulnerability"
+          ],
+          "required_fields_mode": "any",
+          "severity_field": "Risk Rating",
+          "severity_levels": [
+            "Critical",
+            "High",
+            "Moderate",
+            "Low"
+          ],
+          "aging_field": "Vulnerability Detected Date and Time",
+          "sla_critical_days": 14,
+          "sla_high_days": 30,
+          "product_scope_field": [
+            "Product Assets",
+            "Service Assets",
+            "Squad Assets"
+          ],
+          "security_slice_by": "Service internal",
+          "product_scope_value": "Celonis Extractor"
+        },
+        "customer_filter": {
+          "enabled": true,
+          "project_keys": [
+            "CBE"
+          ],
+          "exclude_issue_types": [
+            "Vulnerability"
+          ],
+          "severity_field": "priority",
+          "severity_levels": [
+            "Highest",
+            "High",
+            "Medium",
+            "Low"
+          ],
+          "sla_p1_days": 3,
+          "sla_p2_days": 14,
+          "product_scope_field": [
+            "Product Assets",
+            "Service Assets",
+            "Squad Assets"
+          ],
+          "slice_by": "Service internal",
+          "product_scope_value": "Celonis Extractor"
+        },
+        "project_keys": [
+          "CE"
+        ]
+      },
+      "key": "CE",
+      "name": "Cloud Extractors Suite",
+      "size_tier": "M",
+      "enabled": false,
+      "services": [
+        {
+          "name": "ABAP Export Importer",
+          "service_tier": "Tier 2",
+          "jira_scope": "ABAP Export Importer",
+          "security_scope": "abap-export-importer"
+        },
+        {
+          "name": "Action Engine",
+          "service_tier": "Tier 2",
+          "jira_scope": "Action Engine",
+          "security_scope": "action-engine"
+        },
+        {
+          "name": "Amazon S3",
+          "service_tier": "Tier 2",
+          "jira_scope": "Amazon S3",
+          "security_scope": "amazon-s3"
+        },
+        {
+          "name": "Azure Event Hub",
+          "service_tier": "Tier 2",
+          "jira_scope": "Azure Event Hub",
+          "security_scope": "azure-event-hub"
+        },
+        {
+          "name": "Azure Service Bus",
+          "service_tier": "Tier 2",
+          "jira_scope": "Azure Service Bus",
+          "security_scope": "azure-service-bus"
+        },
+        {
+          "name": "Bamboo",
+          "service_tier": "Tier 2",
+          "jira_scope": "Bamboo",
+          "security_scope": "bamboo"
+        },
+        {
+          "name": "BIPublisher",
+          "service_tier": "Tier 2",
+          "jira_scope": "BIPublisher",
+          "security_scope": "bipublisher"
+        },
+        {
+          "name": "Bitbucket",
+          "service_tier": "Tier 2",
+          "jira_scope": "Bitbucket",
+          "security_scope": "bitbucket"
+        },
+        {
+          "name": "Cloud",
+          "service_tier": "Tier 2",
+          "jira_scope": "Cloud",
+          "security_scope": "cloud"
+        },
+        {
+          "name": "Code Review",
+          "service_tier": "Tier 2",
+          "jira_scope": "Code Review",
+          "security_scope": "code-review"
+        },
+        {
+          "name": "Concur",
+          "service_tier": "Tier 2",
+          "jira_scope": "Concur",
+          "security_scope": "concur"
+        },
+        {
+          "name": "Connector Cloud",
+          "service_tier": "Tier 2",
+          "jira_scope": "Connector Cloud",
+          "security_scope": "connector-cloud"
+        },
+        {
+          "name": "Coupa",
+          "service_tier": "Tier 2",
+          "jira_scope": "Coupa",
+          "security_scope": "coupa"
+        },
+        {
+          "name": "Data Connection UI",
+          "service_tier": "Tier 2",
+          "jira_scope": "Data Connection UI",
+          "security_scope": "data-connection-ui"
+        },
+        {
+          "name": "ETL Guardian",
+          "service_tier": "Tier 2",
+          "jira_scope": "ETL Guardian",
+          "security_scope": "etl-guardian"
+        },
+        {
+          "name": "Extraction Configuration",
+          "service_tier": "Tier 2",
+          "jira_scope": "Extraction Configuration",
+          "security_scope": "extraction-configuration"
+        },
+        {
+          "name": "ExtractionExecutionLogs",
+          "service_tier": "Tier 2",
+          "jira_scope": "ExtractionExecutionLogs",
+          "security_scope": "extractionexecutionlogs"
+        },
+        {
+          "name": "Extractor Builder",
+          "service_tier": "Tier 2",
+          "jira_scope": "Extractor Builder",
+          "security_scope": "extractor-builder"
+        },
+        {
+          "name": "Extractor Framework",
+          "service_tier": "Tier 2",
+          "jira_scope": "Extractor Framework",
+          "security_scope": "extractor-framework"
+        },
+        {
+          "name": "extractors",
+          "service_tier": "Tier 2",
+          "jira_scope": "extractors",
+          "security_scope": "extractors"
+        },
+        {
+          "name": "File Upload",
+          "service_tier": "Tier 2",
+          "jira_scope": "File Upload",
+          "security_scope": "file-upload"
+        },
+        {
+          "name": "Google BigQuery",
+          "service_tier": "Tier 2",
+          "jira_scope": "Google BigQuery",
+          "security_scope": "google-bigquery"
+        },
+        {
+          "name": "Google Sheets",
+          "service_tier": "Tier 2",
+          "jira_scope": "Google Sheets",
+          "security_scope": "google-sheets"
+        },
+        {
+          "name": "Greenhouse",
+          "service_tier": "Tier 2",
+          "jira_scope": "Greenhouse",
+          "security_scope": "greenhouse"
+        },
+        {
+          "name": "Happyfox",
+          "service_tier": "Tier 2",
+          "jira_scope": "Happyfox",
+          "security_scope": "happyfox"
+        },
+        {
+          "name": "Infrastructure",
+          "service_tier": "Tier 2",
+          "jira_scope": "Infrastructure",
+          "security_scope": "infrastructure"
+        },
+        {
+          "name": "Integromat",
+          "service_tier": "Tier 2",
+          "jira_scope": "Integromat",
+          "security_scope": "integromat"
+        },
+        {
+          "name": "Ironclad",
+          "service_tier": "Tier 2",
+          "jira_scope": "Ironclad",
+          "security_scope": "ironclad"
+        },
+        {
+          "name": "JDBC",
+          "service_tier": "Tier 2",
+          "jira_scope": "JDBC",
+          "security_scope": "jdbc"
+        },
+        {
+          "name": "JIRA",
+          "service_tier": "Tier 2",
+          "jira_scope": "JIRA",
+          "security_scope": "jira"
+        },
+        {
+          "name": "Kickstart",
+          "service_tier": "Tier 2",
+          "jira_scope": "Kickstart",
+          "security_scope": "kickstart"
+        },
+        {
+          "name": "kickstart-uipath",
+          "service_tier": "Tier 2",
+          "jira_scope": "kickstart-uipath",
+          "security_scope": "kickstart-uipath"
+        },
+        {
+          "name": "Microsoft AX",
+          "service_tier": "Tier 2",
+          "jira_scope": "Microsoft AX",
+          "security_scope": "microsoft-ax"
+        },
+        {
+          "name": "Microsoft Dynamics 365",
+          "service_tier": "Tier 2",
+          "jira_scope": "Microsoft Dynamics 365",
+          "security_scope": "microsoft-dynamics-365"
+        },
+        {
+          "name": "Oracle BICC",
+          "service_tier": "Tier 2",
+          "jira_scope": "Oracle BICC",
+          "security_scope": "oracle-bicc"
+        },
+        {
+          "name": "Oracle EBS",
+          "service_tier": "Tier 2",
+          "jira_scope": "Oracle EBS",
+          "security_scope": "oracle-ebs"
+        },
+        {
+          "name": "Oracle Fusion Cloud",
+          "service_tier": "Tier 2",
+          "jira_scope": "Oracle Fusion Cloud",
+          "security_scope": "oracle-fusion-cloud"
+        },
+        {
+          "name": "Oracle Taleo",
+          "service_tier": "Tier 2",
+          "jira_scope": "Oracle Taleo",
+          "security_scope": "oracle-taleo"
+        },
+        {
+          "name": "Python Extractor",
+          "service_tier": "Tier 2",
+          "jira_scope": "Python Extractor",
+          "security_scope": "python-extractor"
+        },
+        {
+          "name": "RestR",
+          "service_tier": "Tier 2",
+          "jira_scope": "RestR",
+          "security_scope": "restr"
+        },
+        {
+          "name": "Rossum",
+          "service_tier": "Tier 2",
+          "jira_scope": "Rossum",
+          "security_scope": "rossum"
+        },
+        {
+          "name": "Salesforce",
+          "service_tier": "Tier 2",
+          "jira_scope": "Salesforce",
+          "security_scope": "salesforce"
+        },
+        {
+          "name": "SAP Ariba",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP Ariba",
+          "security_scope": "sap-ariba"
+        },
+        {
+          "name": "SAP Changelog Management UI",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP Changelog Management UI",
+          "security_scope": "sap-changelog-management-ui"
+        },
+        {
+          "name": "SAP Commerce Cloud",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP Commerce Cloud",
+          "security_scope": "sap-commerce-cloud"
+        },
+        {
+          "name": "SAP Data Hub Operator",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP Data Hub Operator",
+          "security_scope": "sap-data-hub-operator"
+        },
+        {
+          "name": "SAP ECC",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP ECC",
+          "security_scope": "sap-ecc"
+        },
+        {
+          "name": "SAP ECC polling",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP ECC polling",
+          "security_scope": "sap-ecc-polling"
+        },
+        {
+          "name": "SAP Fieldglass",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP Fieldglass",
+          "security_scope": "sap-fieldglass"
+        },
+        {
+          "name": "SAP Marketing Cloud",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP Marketing Cloud",
+          "security_scope": "sap-marketing-cloud"
+        },
+        {
+          "name": "SAP RFC change log creation",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP RFC change log creation",
+          "security_scope": "sap-rfc-change-log-creation"
+        },
+        {
+          "name": "SAP RFC extraction module",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP RFC extraction module",
+          "security_scope": "sap-rfc-extraction-module"
+        },
+        {
+          "name": "SAP Sales & Service",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP Sales & Service",
+          "security_scope": "sap-sales-service"
+        },
+        {
+          "name": "SAP SuccessFactors",
+          "service_tier": "Tier 2",
+          "jira_scope": "SAP SuccessFactors",
+          "security_scope": "sap-successfactors"
+        },
+        {
+          "name": "ServiceNow",
+          "service_tier": "Tier 2",
+          "jira_scope": "ServiceNow",
+          "security_scope": "servicenow"
+        },
+        {
+          "name": "Snowflake",
+          "service_tier": "Tier 2",
+          "jira_scope": "Snowflake",
+          "security_scope": "snowflake"
+        },
+        {
+          "name": "streaming-connectors",
+          "service_tier": "Tier 2",
+          "jira_scope": "streaming-connectors",
+          "security_scope": "streaming-connectors"
+        },
+        {
+          "name": "UIPath",
+          "service_tier": "Tier 2",
+          "jira_scope": "UIPath",
+          "security_scope": "uipath"
+        },
+        {
+          "name": "Uplink Broker",
+          "service_tier": "Tier 2",
+          "jira_scope": "Uplink Broker",
+          "security_scope": "uplink-broker"
+        },
+        {
+          "name": "Workday",
+          "service_tier": "Tier 2",
+          "jira_scope": "Workday",
+          "security_scope": "workday"
+        },
+        {
+          "name": "Zendesk",
+          "service_tier": "Tier 2",
+          "jira_scope": "Zendesk",
+          "security_scope": "zendesk"
+        }
+      ],
+      "product_scope_value": "Celonis Extractor"
+    },
+    {
+      "key": "BN",
+      "name": "Business Networks",
+      "size_tier": "M",
+      "enabled": false,
+      "services": [],
+      "product_scope_value": "business-networks"
+    }
+  ]
+}

@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding Readiness — Live</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f4f6fb;color:#1e293b;line-height:1.45}
+.wrap{max-width:1240px;margin:0 auto;padding:24px}
+header.top{background:linear-gradient(120deg,#1f3864,#2e5496);color:#fff;border-radius:16px;padding:22px 26px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 6px 24px rgba(31,56,100,.18)}
+header.top h1{font-size:22px;font-weight:700}header.top p{font-size:13px;opacity:.85;margin-top:4px}
+.hbtn{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.hbtn:hover{background:rgba(255,255,255,.28)}
+.controls{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.controls label{color:#fff;font-size:13px;font-weight:600;opacity:.9}
+.controls select,.controls input{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:500}
+.controls select option{color:#1e293b}
+.controls input::placeholder{color:rgba(255,255,255,.6)}
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.stat{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 10px rgba(30,41,59,.06);border:1px solid #eef1f7}
+.stat .n{font-size:30px;font-weight:800;line-height:1}.stat .l{font-size:12px;font-weight:600;color:#64748b;margin-top:8px;text-transform:uppercase;letter-spacing:.4px}
+.stat .bar{height:4px;border-radius:4px;margin-top:12px}
+.grid{display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}
+.panel{background:#fff;border-radius:16px;box-shadow:0 2px 14px rgba(30,41,59,.07);border:1px solid #eef1f7;overflow:hidden}
+.panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:#64748b;padding:16px 18px 10px}
+.plist{list-style:none}.plist li{padding:14px 18px;border-top:1px solid #f1f4f9;cursor:pointer;display:flex;align-items:center;gap:12px}
+.plist li:hover{background:#f8fafc}.plist li.active{background:#eef3fb;border-left:4px solid #2e5496;padding-left:14px}
+.pill{font-size:10px;font-weight:800;color:#fff;padding:3px 9px;border-radius:999px;text-transform:uppercase}
+.dhead{padding:20px 24px;border-bottom:1px solid #f1f4f9;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.dhead .title{font-size:20px;font-weight:800}.dhead .why{font-size:13px;color:#64748b;width:100%;margin-top:4px}
+.tabs{display:flex;gap:4px;padding:12px 24px 0;border-bottom:1px solid #f1f4f9;flex-wrap:wrap;background:#fafbfe;overflow-x:auto}
+.tab{padding:9px 14px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.tab:hover{background:#eef3fb}.tab.active{background:#fff;color:#1f3864;border:1px solid #e2e8f0;border-bottom-color:#fff;margin-bottom:-1px}
+.section{padding:18px 24px;border-bottom:1px solid #f6f8fb}
+.section h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#94a3b8;margin-bottom:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+.card{background:#f8fafc;border-radius:12px;padding:12px 14px;border:1px solid #eef1f7}
+.card .v{font-size:22px;font-weight:800}.card .k{font-size:11px;color:#64748b;margin-top:3px;font-weight:600}
+.kv{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed #eef1f7}
+.kv:last-child{border-bottom:none}.kv .kk{color:#64748b}.kv .vv{font-weight:700}
+.good{color:#16a34a}.warn{color:#d97706}.bad{color:#dc2626}
+.gatebox{background:#fbfcfe;border:1px solid #eef1f7;border-radius:12px;padding:16px}
+.gaplist{list-style:none;margin:8px 0 0}.gaplist li{font-size:13px;padding:6px 0;display:flex;gap:8px}
+.tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;margin-top:1px}
+.tag.crit{background:#fde2e2;color:#b91c1c}.tag.std{background:#e5e7eb;color:#475569}.tag.strat{background:#fef3c7;color:#a16207}
+.verdict{margin-top:16px;padding:16px 18px;border-radius:12px;color:#fff;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+.verdict .vt{font-size:18px;font-weight:800}.verdict .vd{font-size:13px;opacity:.92;max-width:640px}
+.badge{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700}
+.badge.ok{background:#dcfce7;color:#15803d}.badge.err{background:#fee2e2;color:#b91c1c}.badge.nc{background:#e5e7eb;color:#64748b}
+.badge.reg{background:#dbeafe;color:#1d4ed8}
+.unavailable{padding:14px;background:#fef2f2;border:1px dashed #fecaca;border-radius:10px;color:#991b1b;font-size:13px}
+.notconfig{padding:14px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;color:#64748b;font-size:13px}
+.foot{font-size:11px;color:#94a3b8;text-align:center;padding:20px}
+.loading{padding:40px;text-align:center;color:#64748b}
+/* -------- executive summary -------- */
+.exec-hero{background:linear-gradient(180deg,#fff,#f8fafc);border-radius:20px;padding:32px 34px;margin:22px 0;box-shadow:0 4px 20px rgba(30,41,59,.08);border:1px solid #eef1f7;display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:center}
+.exec-hero .verdict{padding:20px 24px;border-radius:16px;color:#fff;text-align:center}
+.exec-hero .verdict .lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+.exec-hero .verdict .tier{font-size:38px;font-weight:900;line-height:1;margin:8px 0 6px}
+.exec-hero .verdict .icon{font-size:36px}
+.exec-hero h1.projname{font-size:26px;font-weight:800;color:#1f3864;margin-bottom:4px}
+.exec-hero .meta{font-size:13px;color:#64748b;margin-bottom:14px}
+.exec-hero .reco{font-size:16px;color:#334155;line-height:1.55;font-weight:500}
+.exec-hero .reco b{color:#1f3864}
+/* -------- headline cards -------- */
+.headline-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 22px}
+.hcard{background:#fff;border-radius:16px;padding:22px 24px;border:1px solid #eef1f7;box-shadow:0 2px 10px rgba(30,41,59,.05);border-top:5px solid #cbd5e1;position:relative}
+.hcard.critical{border-top-color:#dc2626;background:#fefcfc}
+.hcard.warning {border-top-color:#d97706;background:#fefdfb}
+.hcard.ok      {border-top-color:#16a34a}
+.hcard .htitle{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#64748b}
+.hcard .hbig{font-size:44px;font-weight:900;line-height:1;margin:8px 0}
+.hcard.critical .hbig{color:#b91c1c}
+.hcard.warning  .hbig{color:#a16207}
+.hcard.ok       .hbig{color:#15803d}
+.hcard .hsub{font-size:13px;color:#64748b;line-height:1.4}
+.hcard .hnote{font-size:12px;margin-top:10px;padding:6px 10px;border-radius:8px;display:inline-block}
+.hcard.critical .hnote{background:#fee2e2;color:#991b1b;font-weight:600}
+.hcard.warning  .hnote{background:#fef3c7;color:#a16207;font-weight:600}
+.hcard.ok       .hnote{background:#dcfce7;color:#15803d;font-weight:600}
+/* -------- top risks -------- */
+.risk-panel{background:#fff;border-radius:16px;padding:24px 28px;margin-bottom:22px;border:1px solid #eef1f7;box-shadow:0 2px 10px rgba(30,41,59,.05)}
+.risk-panel h2{font-size:14px;font-weight:800;color:#1f3864;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.risk-panel h2 .cnt{background:#dc2626;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:800}
+.risk-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #f1f4f9}
+.risk-item:last-child{border-bottom:none}
+.risk-item .num{font-size:22px;font-weight:900;color:#dc2626;width:28px;flex-shrink:0}
+.risk-item .body{flex:1}
+.risk-item .body .who{font-weight:700;color:#1f3864;font-size:15px}
+.risk-item .body .what{font-size:13px;color:#475569;margin-top:2px;line-height:1.5}
+.risk-item .body .why{font-size:12px;color:#94a3b8;margin-top:4px}
+.risk-item .sev{font-size:10px;font-weight:800;padding:3px 10px;border-radius:6px;flex-shrink:0;text-transform:uppercase}
+.risk-item .sev.critical{background:#fee2e2;color:#b91c1c}
+.risk-item .sev.high{background:#fef3c7;color:#a16207}
+.risk-item .go{color:#94a3b8;font-size:18px;flex-shrink:0}
+.risk-item.clickable{cursor:pointer}
+.risk-item.clickable:hover{background:#f8fafc}
+.risk-panel .clean{color:#15803d;font-weight:600;padding:12px 0}
+/* -------- collapsible sections -------- */
+details.expand{background:#fff;border-radius:16px;margin-bottom:14px;border:1px solid #eef1f7;box-shadow:0 2px 8px rgba(30,41,59,.04);overflow:hidden}
+details.expand > summary{list-style:none;padding:16px 24px;cursor:pointer;font-weight:700;color:#1f3864;font-size:14px;display:flex;align-items:center;gap:10px;user-select:none}
+details.expand > summary::-webkit-details-marker{display:none}
+details.expand > summary::before{content:'▶';font-size:11px;color:#94a3b8;transition:transform .2s}
+details.expand[open] > summary::before{transform:rotate(90deg)}
+details.expand > summary:hover{background:#f8fafc}
+details.expand > summary .chip{margin-left:auto;font-size:12px;color:#64748b;font-weight:500}
+details.expand .expand-body{padding:0 24px 20px}
+/* -------- insights table -------- */
+.insights-table{width:100%;border-collapse:collapse;font-size:13px}
+.insights-table th{text-align:left;padding:10px 12px;background:#f8fafc;font-weight:700;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #e2e8f0}
+.insights-table td{padding:12px 12px;border-bottom:1px solid #f1f4f9;vertical-align:top}
+.insights-table tr.clickable{cursor:pointer}.insights-table tr.clickable:hover{background:#f8fafc}
+.insights-table .isev{display:inline-block;font-size:10px;font-weight:800;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
+.insights-table .isev.high{background:#fee2e2;color:#b91c1c}
+.insights-table .isev.medium{background:#fef3c7;color:#a16207}
+.insights-table .isev.low{background:#e0e7ff;color:#4338ca}
+.insights-table .icat{font-size:11px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.3px}
+.insights-table .isvc{font-weight:700;color:#1f3864}
+.insights-table .iobs{font-weight:700;color:#0f172a}
+.insights-table .iint{color:#475569;font-size:12px;line-height:1.5}
+.insights-table .iact{color:#0f766e;font-size:12px;line-height:1.5;font-style:italic}
+.insight-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.insight-summary .isumcard{background:#f8fafc;border-radius:10px;padding:12px 14px;border:1px solid #eef1f7;text-align:center}
+.insight-summary .isumcard .n{font-size:22px;font-weight:800}
+.insight-summary .isumcard .l{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+/* landing */
+.landing-search{display:flex;gap:10px;align-items:center;margin:22px 0}
+.landing-search input{flex:1;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;font-size:14px;background:#fff;box-shadow:0 2px 10px rgba(30,41,59,.05)}
+.landing-search select{padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;font-size:14px;background:#fff;font-weight:600}
+.plisttable{background:#fff;border-radius:16px;box-shadow:0 2px 14px rgba(30,41,59,.07);border:1px solid #eef1f7;overflow:hidden}
+.projrow{padding:14px 18px;border-top:1px solid #f1f4f9;cursor:pointer;display:flex;align-items:center;gap:14px}
+.projrow:hover{background:#f8fafc}
+.projrow:first-child{border-top:none}
+.projkey{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;color:#64748b;background:#f1f5f9;padding:3px 8px;border-radius:5px;font-weight:700}
+.projname{font-weight:600;font-size:15px;flex:1}
+.projtype{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
+</style></head><body>
+<div class="wrap">
+  <header class="top">
+    <div id="topLeft">
+      <h1 id="topTitle">Onboarding Readiness — Live</h1>
+      <p id="topSub">Pick a Jira project and time window to see its readiness for ownership transfer.</p>
+      <div class="controls" id="topControls"></div>
+    </div>
+    <div id="topRight"></div>
+  </header>
+  <div id="content"></div>
+  <div class="foot">Live prototype · window filter scopes Jira JQL by created/resolved date · project tier = worst-service-wins.</div>
+</div>
+
+<script>
+const TIERS={
+ RED:{label:"Red — Not Ready",color:"#dc2626",desc:"A Critical criterion failed."},
+ GREEN:{label:"Green — Growth System",color:"#16a34a",desc:"All gates clear."},
+ AMBER:{label:"Amber — Conditional",color:"#d97706",desc:"A few standard gaps remain."},
+ DEFERRED:{label:"Deferred",color:"#64748b",desc:"Too many open standard gaps."}};
+// Window values are in DAYS (weeks/months expressed as day counts) so we can
+// support sub-month windows like 1–2 weeks for recent-incident triage.
+const WINDOWS = [
+  {v: 7,   label:"Last 1 week"},
+  {v: 14,  label:"Last 2 weeks"},
+  {v: 30,  label:"Last 1 month"},
+  {v: 90,  label:"Last 3 months"},
+  {v: 180, label:"Last 6 months"},
+  {v: 365, label:"Last 12 months"},
+  {v: 0,   label:"All time"},
+];
+let STATE = { view: "landing", project: null, window: 180, curService: 0, jiraProjects: null, report: null, alerts: null, error: null, topPage: 0, ddScope: "prod" };
+
+function parseHash(){
+  const h = location.hash.replace(/^#/, "");
+  if(!h || h==="/") return { view: "landing" };
+  const m = h.match(/^\/project\/([^\/?]+)(?:\?(.+))?/);
+  if(m){
+    const params = new URLSearchParams(m[2] || "");
+    return { view: "project", project: m[1], window: +(params.get("w") || 180) };
+  }
+  return { view: "landing" };
+}
+function navigate(state){
+  if(state.view === "landing") location.hash = "";
+  else location.hash = `#/project/${state.project}?w=${state.window}`;
+}
+
+async function loadPortfolio(){
+  STATE.portfolio = null; STATE.error = null; render();
+  try{
+    const r = await fetch(`/api/overview?window_days=${STATE.window}`);
+    if(!r.ok){ STATE.error = `HTTP ${r.status}: ${(await r.text()).slice(0,300)}`; render(); return; }
+    STATE.portfolio = await r.json();
+  }catch(e){ STATE.error = e.message; }
+  render();
+}
+
+async function loadReport(){
+  STATE.report = null; STATE.error = null; STATE.notRegistered = false; STATE.alerts = null; render();
+  try{
+    const r = await fetch(`/api/report/${encodeURIComponent(STATE.project)}?window_days=${STATE.window}`);
+    if(r.status === 404){ STATE.notRegistered = true; render(); return; }
+    if(!r.ok){ STATE.error = `HTTP ${r.status}: ${(await r.text()).slice(0,300)}`; render(); return; }
+    STATE.report = await r.json();
+  }catch(e){ STATE.error = e.message; }
+  render();
+  loadAlerts();   // fire-and-forget: Datadog alert history loads in the background
+}
+
+async function loadAlerts(){
+  const proj = STATE.project;
+  STATE.alerts = null;
+  STATE.topPage = 0;
+  STATE.ddScope = "prod";
+  const wdays = STATE.window > 0 ? Math.min(STATE.window, 180) : 180;
+  try{
+    const r = await fetch(`/api/datadog/alerts/${encodeURIComponent(proj)}?window_days=${wdays}&limit=30`);
+    if(proj !== STATE.project) return;   // user navigated away; ignore stale result
+    STATE.alerts = r.ok ? await r.json() : { error: `HTTP ${r.status}: ${(await r.text()).slice(0,200)}` };
+  }catch(e){ STATE.alerts = { error: e.message }; }
+  if(proj === STATE.project) render();
+}
+
+// ============================ LANDING (onboarding portfolio) ============================
+function renderLanding(){
+  document.getElementById("topTitle").textContent = "Onboarding Health Portfolio";
+  document.getElementById("topSub").textContent = "Candidate projects being reviewed for ownership transfer. Each card shows the current readiness tier and gap counts.";
+  document.getElementById("topControls").innerHTML = `
+    <label>Time window:</label>
+    <select onchange="STATE.window=+this.value;loadPortfolio()">
+      ${WINDOWS.map(w => `<option value="${w.v}" ${w.v===STATE.window?'selected':''}>${w.label}</option>`).join("")}
+    </select>`;
+  document.getElementById("topRight").innerHTML = `<button class="hbtn" onclick="loadPortfolio()">↻ Refresh</button>`;
+
+  const pf = STATE.portfolio;
+  let body = "";
+  if(!pf && !STATE.error) body = `<div class="loading">Loading health portfolio…</div>`;
+  else if(STATE.error)    body = `<div class="unavailable">Couldn't load portfolio — ${STATE.error}</div>`;
+  else if(!pf.length) body = `<div style="margin-top:22px;padding:36px 32px;background:linear-gradient(180deg,#fff,#f8fafc);border-radius:16px;border:1px dashed #cbd5e1;text-align:center;box-shadow:0 2px 10px rgba(30,41,59,.05)">
+    <div style="font-size:44px;line-height:1">📋</div>
+    <h2 style="font-size:20px;font-weight:800;color:#1f3864;margin-top:12px">Register a project to see its onboarding health</h2>
+    <p style="font-size:14px;color:#64748b;line-height:1.6;max-width:560px;margin:12px auto 20px">
+      This dashboard evaluates candidate projects for ownership transfer using their Jira, GitHub, and Datadog signals.
+      Paste any Jira board URL to add a new project.
+    </p>
+    <div style="background:#f1f5f9;border-radius:10px;padding:14px 20px;max-width:640px;margin:0 auto;font-family:ui-monospace,SFMono-Regular,monospace;font-size:12.5px;color:#475569;text-align:left">
+      <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:6px">Example prompt to your assistant</div>
+      https://your-site.atlassian.net/jira/software/c/projects/&lt;KEY&gt;/boards/&lt;N&gt;<br>
+      <span style="color:#64748b">Add this project to the onboarding dashboard.</span>
+    </div>
+    <p style="font-size:11px;color:#94a3b8;margin-top:20px">
+      The <code>register-onboarding-project</code> skill handles URL parsing, config generation, and service discovery automatically.
+    </p>
+  </div>`;
+  else {
+    const counts = {};
+    pf.forEach(p => counts[p.tier] = (counts[p.tier]||0)+1);
+    const strip = `<div class="strip">${[["GREEN","Growth-ready"],["AMBER","Conditional"],["DEFERRED","Deferred"],["RED","Blocked"]]
+      .map(([t,l])=>`<div class="stat"><div class="n" style="color:${TIERS[t].color}">${counts[t]||0}</div><div class="l">${l}</div><div class="bar" style="background:${TIERS[t].color}"></div></div>`).join("")}</div>`;
+    const cards = pf.map(p => {
+      const t = TIERS[p.tier];
+      const pv = p.project_view || {};
+      const tot = pv.tickets?.total;
+      const wLabel = (WINDOWS.find(w=>w.v===(p.window_days||0))||{}).label || "";
+      return `<div class="projrow" onclick="pickProject('${p.key}')" style="padding:20px;gap:20px">
+        <span class="pill" style="background:${t.color};font-size:11px;padding:5px 12px">${p.tier}</span>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:17px">${p.name} <span style="color:#94a3b8;font-weight:600">· ${p.key}</span></div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px">
+            ${p.services.length} service(s) · ${wLabel}
+            ${tot!=null? ` · <b>${tot}</b> tickets in window`:''}
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#94a3b8;font-weight:700;letter-spacing:.3px">GAPS</div>
+          <div style="font-size:13px;font-weight:700;margin-top:2px">
+            <span class="${p.rollup.critical_gaps_total?'bad':'good'}">${p.rollup.critical_gaps_total} crit</span>
+            &nbsp;·&nbsp;
+            <span>${p.rollup.standard_gaps_total} std</span>
+          </div>
+        </div>
+        <div style="color:#94a3b8;font-size:18px">→</div>
+      </div>`;
+    }).join("");
+    body = strip + `<div class="plisttable" style="margin-top:8px">${cards}</div>`;
+  }
+
+  document.getElementById("content").innerHTML = `
+    <div class="landing-search" style="margin-bottom:14px">
+      <input id="jumpKey" placeholder="Paste a Jira URL or project key (e.g. TMT) — press Enter"
+             style="flex:1"
+             onkeydown="if(event.key==='Enter'){ jumpToKey(this.value); }"/>
+      <button class="hbtn" style="background:#2e5496;border-color:#2e5496" onclick="jumpToKey(document.getElementById('jumpKey').value)">Open →</button>
+    </div>
+    ${body}
+    <p style="font-size:11px;color:#94a3b8;margin-top:18px">
+      New project to onboard-review? Add it to <code>onboarding-readiness/projects.json</code> — with its Jira components, service tiers, GitHub repos, and Datadog tags — and it appears here on next refresh.
+    </p>
+  `;
+}
+
+async function pickProject(key){
+  // Navigate straight into the project view. If the key isn't registered,
+  // loadReport() surfaces a friendly 404 screen — no confirm popup, no
+  // auto-onboard offer. Users register projects via POST /api/register.
+  STATE.project = key; STATE.curService = 0; STATE.view = "project";
+  navigate(STATE);
+}
+
+function summarizeOnboardResult(key, j){
+  // The endpoint returns two shapes:
+  //   (a) {already_registered:true, entry, hint}  — cached, no discovery ran
+  //   (b) {already_registered:false|refreshed, detected_product_tag,
+  //        jira_components_found, cbe_services_found, services_registered, entry, hint}
+  if (j.already_registered === true && !j.refreshed) {
+    const svcCount = (j.entry?.services || []).length;
+    let msg = `"${key}" is already in the cache (${svcCount} service${svcCount===1?'':'s'}).`;
+    msg += `\n\nTo re-run discovery from Jira, hit:\n/api/auto-onboard?url_or_key=${key}&force=true`;
+    msg += `\nTo remove it entirely: DELETE /api/project/${key}`;
+    alert(msg);
+    return;
+  }
+  const tag  = j.detected_product_tag || "(unknown)";
+  const jcf  = j.jira_components_found ?? "?";
+  const csf  = j.cbe_services_found ?? "?";
+  const total= j.services_registered ?? (j.entry?.services || []).length;
+  const verb = j.refreshed ? "Refreshed" : "Discovered";
+  alert(`${verb} ${key}.\n\nProduct tag: "${tag}"\nJira Components: ${jcf}\nCBE services discovered: ${csf}\nTotal services cached: ${total}`);
+}
+
+function jumpToKey(raw){
+  const s = (raw||"").trim();
+  if(!s) return;
+  // Accept either a bare project key ("TMT") or a full Jira URL — extract key from URL if present.
+  let key = s;
+  const m = s.match(/\/projects\/([A-Za-z0-9_-]+)/) ||
+            s.match(/\/browse\/([A-Za-z]+)-\d+/);   // also handle /browse/TMT-1234
+  if (m) key = m[1];
+  key = key.toUpperCase();
+  pickProject(key);
+}
+
+// ============================ PROJECT (dashboard) ============================
+// ============================ INSIGHTS ENGINE ============================
+// Auto-generates analytical categorizations across services. Each insight has:
+//   severity: high | medium | low
+//   category: Growth | Delivery | Security | Customer | Config
+//   service:  which service
+//   observation: the raw finding (e.g. "Feature share 67%")
+//   interpretation: what it means in plain English
+//   action: recommended next step
+function generateInsights(p){
+  const out = [];
+  const svcIsPlaceholder = (name) => (name||"").toLowerCase().startsWith("todo");
+  p.services.forEach((s, i) => {
+    if (svcIsPlaceholder(s.name)) return;
+    const src = s.source_status || {};
+
+    // ---- GROWTH / STRATEGIC ----
+    if (src.jira === "ok" && s.roadmap && s.roadmap.feature_pct != null){
+      const fp = s.roadmap.feature_pct;
+      if (fp < 40){
+        out.push({priority:900, severity:"high", category:"Growth", service:s.name, serviceIdx:i,
+          observation:`Feature share ${fp}% — heavy maintenance profile`,
+          interpretation:"Bug/task work dominates. Service is effectively in maintenance mode, not growth mode.",
+          action:"Consider routing to Sustaining/Maintenance track instead of Growth — this is a strategic-fit call, not a quality rejection."});
+      } else if (fp < 80){
+        out.push({priority:600, severity:"medium", category:"Growth", service:s.name, serviceIdx:i,
+          observation:`${fp}% feature share (target ≥80%)`,
+          interpretation:"Below the 80/20 growth-alignment threshold. Bug/task work is heavier than expected.",
+          action:"Review the ticket mix — either legitimate bug workload (route to sustaining) or a real quality issue worth investigating."});
+      } else if (fp > 95){
+        out.push({priority:200, severity:"low", category:"Growth", service:s.name, serviceIdx:i,
+          observation:`Feature share ${fp}% — very growth-heavy`,
+          interpretation:"Nearly all work is features. May indicate under-investment in bug fixes / tech debt.",
+          action:"Verify recent bugs aren't being labeled as features. Check tech-debt backlog."});
+      }
+    }
+
+    // ---- DELIVERY QUALITY ----
+    if (src.jira === "ok"){
+      const rr = s.reopen && s.reopen.rate_pct;
+      if (rr != null && rr > 5){
+        out.push({priority:rr>10?800:500, severity:rr>10?"high":"medium",
+          category:"Delivery", service:s.name, serviceIdx:i,
+          observation:`Reopen rate ${rr}% (${s.reopen.count} reopened)`,
+          interpretation:"High reopens suggest fixes aren't sticking — QA gaps, missing regression coverage, or premature ticket closure.",
+          action:"Review last 10 reopens; tighten definition-of-done; consider adding regression tests for the top-reopened areas."});
+      }
+      const p90 = s.cycle && s.cycle.p90_days;
+      if (p90 != null && p90 > 20){
+        out.push({priority:p90>40?700:400, severity:p90>40?"high":"medium",
+          category:"Delivery", service:s.name, serviceIdx:i,
+          observation:`p90 cycle time ${p90} days`,
+          interpretation:"10% of tickets take significantly longer than the norm — capacity or complexity issue.",
+          action:"Identify long-tail tickets; look for systematic under-estimation or blocking dependencies."});
+      }
+      const tw = s.throughput_per_week;
+      if (tw != null && tw < 3){
+        out.push({priority:300, severity:"low", category:"Delivery", service:s.name, serviceIdx:i,
+          observation:`Throughput ${tw}/wk — very low`,
+          interpretation:"Very few tickets closed per week. Either the team is small, focused on large features, or capacity-constrained.",
+          action:"Confirm this matches team size and current milestone; low throughput on a large team is a red flag."});
+      }
+    }
+
+    // ---- SECURITY DEBT ----
+    if (src.security === "ok" && s.security){
+      const sec = s.security;
+      const critOpen = (sec.open_by_severity||{}).Critical || 0;
+      const highOpen = (sec.open_by_severity||{}).High || 0;
+      const oldest = sec.aging && sec.aging.oldest_open_days;
+      const critBreached = (sec.sla||{}).critical_breached || 0;
+
+      if (critOpen > 0){
+        out.push({priority:1000+critOpen, severity:"high", category:"Security", service:s.name, serviceIdx:i,
+          observation:`${critOpen} open Critical vulnerabilit${critOpen>1?'ies':'y'}`,
+          interpretation:"Critical vulns block onboarding transfer regardless of tier.",
+          action:"Global Team must remediate before ownership can transfer. Escalate if not on active remediation plan."});
+      }
+      if (critBreached > 0){
+        out.push({priority:950, severity:"high", category:"Security", service:s.name, serviceIdx:i,
+          observation:`${critBreached} Critical vuln${critBreached>1?'s':''} past ${(sec.sla||{}).critical_days}-day SLA`,
+          interpretation:"Remediation is not just late, it's breached the internal SLA. Signals a systemic response problem.",
+          action:"Escalate immediately; investigate why remediation stalled. This is a leadership visibility issue."});
+      }
+      if (highOpen > 0){
+        out.push({priority:600, severity:"medium", category:"Security", service:s.name, serviceIdx:i,
+          observation:`${highOpen} open High vulnerabilit${highOpen>1?'ies':'y'}`,
+          interpretation:"Open Highs count as Standard gaps — investigate remediation plan.",
+          action:"Prioritize remediation to unblock ownership transfer."});
+      }
+      if (oldest && oldest > 60){
+        out.push({priority:400, severity:oldest>180?"high":"medium",
+          category:"Security", service:s.name, serviceIdx:i,
+          observation:`Oldest open vuln aged ${oldest} days (${sec.aging.oldest_open_key||''})`,
+          interpretation:"Vulnerabilities that sit >60 days signal remediation velocity issues, not just workload.",
+          action:"Root-cause why oldest items stall; consider dedicated security-debt sprint."});
+      }
+    } else if (src.security === "not_configured"){
+      out.push({priority:100, severity:"low", category:"Config", service:s.name, serviceIdx:i,
+        observation:"Security source unavailable",
+        interpretation:"Cannot assess vulnerability posture for this service.",
+        action:"Verify Jira token can read CBE, or set security_filter.enabled = false in projects.json if not tracking here."});
+    }
+
+    // ---- CUSTOMER PRESSURE ----
+    if (src.customer_issues === "ok" && s.customer_issues){
+      const c = s.customer_issues;
+      const lvls = c.severity_levels || ["Highest","High"];
+      const top1Open = (c.open_by_severity||{})[lvls[0]] || 0;
+      const oldest = c.aging && c.aging.oldest_open_days;
+      const breach = (c.sla||{}).top1_breached || 0;
+
+      if (top1Open > 0){
+        out.push({priority:750+top1Open, severity:"high", category:"Customer", service:s.name, serviceIdx:i,
+          observation:`${top1Open} ${lvls[0]}-priority customer issue${top1Open>1?'s':''} open`,
+          interpretation:"Highest-severity customer issues indicate live escalations. Inheriting these is inheriting active user pain.",
+          action:"Verify Global Team has active remediation plan; consider whether India team should shadow the resolution before accepting."});
+      }
+      if (breach > 0){
+        out.push({priority:700, severity:"medium", category:"Customer", service:s.name, serviceIdx:i,
+          observation:`${breach} top-severity customer issue${breach>1?'s':''} past SLA`,
+          interpretation:"Customer commitments have already been broken — this is a support/relationship risk.",
+          action:"Bring to leadership attention alongside remediation plan."});
+      }
+      if (oldest && oldest > 45){
+        out.push({priority:350, severity:"medium", category:"Customer", service:s.name, serviceIdx:i,
+          observation:`Oldest open customer issue: ${oldest} days (${c.aging.oldest_open_key||''})`,
+          interpretation:"Customer issues sitting >45 days are relationship risks and often signal complex under-investment.",
+          action:"Assess whether India team has skills to close; if not, extend Global Team ownership."});
+      }
+    }
+
+    // ---- CONFIG GAPS ----
+    if (src.github === "not_configured"){
+      out.push({priority:50, severity:"low", category:"Config", service:s.name, serviceIdx:i,
+        observation:"GitHub not configured",
+        interpretation:"Code health (PR reviews, branch protection, merge times) can't be scored for this service.",
+        action:"Add github block with repo(s) in projects.json to enable code-health signals."});
+    }
+    if (src.datadog === "not_configured"){
+      out.push({priority:50, severity:"low", category:"Config", service:s.name, serviceIdx:i,
+        observation:"Datadog not configured",
+        interpretation:"Observability (monitors, alerting, incidents) can't be scored for this service.",
+        action:"Add datadog block with service tag in projects.json."});
+    }
+  });
+
+  return out.sort((a,b) => b.priority - a.priority);
+}
+
+function insightsSection(p){
+  const insights = generateInsights(p);
+  if (insights.length === 0){
+    return `<div style="padding:32px;text-align:center;color:#15803d;font-weight:600">✅ No noteworthy insights — all measurable signals within expected ranges.</div>`;
+  }
+  // Summary by severity + by category
+  const byS = {high:0, medium:0, low:0};
+  const byC = {};
+  insights.forEach(i => { byS[i.severity]++; byC[i.category] = (byC[i.category]||0)+1; });
+
+  const summary = `<div class="insight-summary">
+    <div class="isumcard" style="border-left:4px solid #dc2626"><div class="n bad">${byS.high}</div><div class="l">High severity</div></div>
+    <div class="isumcard" style="border-left:4px solid #d97706"><div class="n warn">${byS.medium}</div><div class="l">Medium</div></div>
+    <div class="isumcard" style="border-left:4px solid #4338ca"><div class="n" style="color:#4338ca">${byS.low}</div><div class="l">Low / info</div></div>
+    ${Object.entries(byC).map(([c,n])=>`<div class="isumcard"><div class="n">${n}</div><div class="l">${c}</div></div>`).join("")}
+  </div>`;
+
+  const table = `<table class="insights-table">
+    <thead><tr>
+      <th style="width:80px">Severity</th>
+      <th style="width:100px">Category</th>
+      <th style="width:170px">Service</th>
+      <th style="width:220px">Observation</th>
+      <th>Interpretation</th>
+      <th>Recommended action</th>
+    </tr></thead>
+    <tbody>${insights.map(i => `
+      <tr class="clickable" onclick="STATE.curService=${i.serviceIdx};render()">
+        <td><span class="isev ${i.severity}">${i.severity}</span></td>
+        <td><span class="icat">${i.category}</span></td>
+        <td><span class="isvc">${i.service}</span></td>
+        <td><span class="iobs">${i.observation}</span></td>
+        <td><span class="iint">${i.interpretation}</span></td>
+        <td><span class="iact">→ ${i.action}</span></td>
+      </tr>`).join("")}</tbody>
+  </table>
+  <p style="font-size:11px;color:#94a3b8;margin-top:12px">Click any row to drill into that service's detailed view. Insights auto-generated from current metrics.</p>`;
+
+  return summary + table;
+}
+
+function renderProject(){
+  const p = STATE.report;
+  document.getElementById("topTitle").textContent = p ? `${p.name} · ${p.key}` : `Loading ${STATE.project}…`;
+  document.getElementById("topSub").textContent  = p ? `${p.services.length} service(s) · project tier auto-computed (worst-service-wins).` : "";
+  document.getElementById("topControls").innerHTML = `
+    <label>Time window:</label>
+    <select onchange="STATE.window=+this.value;navigate(STATE);loadReport()">
+      ${WINDOWS.map(w => `<option value="${w.v}" ${w.v===STATE.window?'selected':''}>${w.label}</option>`).join("")}
+    </select>`;
+  document.getElementById("topRight").innerHTML = `
+    <button class="hbtn" onclick="STATE.view='landing';navigate(STATE);render()">← All projects</button>
+    <button class="hbtn" onclick="loadReport()">↻ Refresh</button>`;
+
+  if(STATE.notRegistered){
+    document.getElementById("topTitle").textContent = `${STATE.project} — not registered`;
+    document.getElementById("topSub").textContent  = "This project isn't in projects.json yet.";
+    const example = JSON.stringify({
+      key: STATE.project,
+      name: STATE.project,
+      product_scope_value: "<CBE Product Assets label — e.g. task-mining>",
+      services: [
+        {name: "<Service name>", security_scope: "<CBE Service internal value>"}
+      ]
+    }, null, 2);
+    document.getElementById("content").innerHTML = `
+      <div style="margin-top:22px;padding:32px 28px;background:linear-gradient(180deg,#fff,#f8fafc);border-radius:16px;border:1px dashed #cbd5e1;box-shadow:0 2px 10px rgba(30,41,59,.05)">
+        <div style="font-size:36px;line-height:1">📋</div>
+        <h2 style="font-size:20px;font-weight:800;color:#1f3864;margin-top:12px">"${STATE.project}" isn't registered yet</h2>
+        <p style="font-size:14px;color:#64748b;line-height:1.6;max-width:640px;margin:10px 0 18px">
+          Register it with <code>POST /api/register</code>, then reload. The dashboard will pick it up on next portfolio refresh.
+        </p>
+        <div style="background:#0f172a;color:#e2e8f0;border-radius:10px;padding:16px 18px;font-family:ui-monospace,SFMono-Regular,monospace;font-size:12.5px;line-height:1.6;overflow:auto">
+          <div style="color:#94a3b8;margin-bottom:8px;font-size:11px">curl example</div>
+<pre style="margin:0;white-space:pre-wrap">curl -X POST http://localhost:8000/api/register \\
+  -H "Content-Type: application/json" \\
+  -d '${example.replace(/'/g, "\\'")}'</pre>
+        </div>
+        <p style="font-size:12px;color:#64748b;margin-top:16px">
+          Field reference: <code>product_scope_value</code> is the "Product Assets" label in CBE (string or list); <code>security_scope</code> is the "Service internal" value CBE uses to tag this service's tickets.
+        </p>
+        <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="hbtn" onclick="STATE.view='landing';navigate(STATE);render()">← Back to portfolio</button>
+          <button class="hbtn" onclick="loadReport()">↻ I've registered it — try again</button>
+        </div>
+      </div>`;
+    return;
+  }
+  if(!p && !STATE.error) { document.getElementById("content").innerHTML = `<div class="loading">Loading live data for ${STATE.project}…</div>`; return; }
+  if(STATE.error) { document.getElementById("content").innerHTML = `<div class="unavailable" style="margin-top:20px">${STATE.error}</div>`; return; }
+
+  // Executive-first layout: verdict + headline cards + top risks up top,
+  // detailed matrices and per-service tabs collapsed behind <details>.
+  const execLayer = execHero(p) + headlineCards(p) + topRisks(p);
+
+  const insightsCount = generateInsights(p).length;
+  const detailedLayer = `
+    <details class="expand" open>
+      <summary>📊 Overall Project Health <span class="chip">Jira ${p.key} + CBE · in window</span></summary>
+      <div class="expand-body">${projectProductBlock(p)}</div>
+    </details>
+    <details class="expand" open>
+      <summary>🔔 Datadog reliability <span class="chip">health verdict · trends · exposure · ownership</span></summary>
+      <div class="expand-body">${datadogAlertsSection(p)}</div>
+    </details>
+    <details class="expand">
+      <summary>🧠 Analytical insights <span class="chip">${insightsCount} finding${insightsCount!==1?'s':''} · for deeper review</span></summary>
+      <div class="expand-body">${insightsSection(p)}</div>
+    </details>
+    <details class="expand" open>
+      <summary>⚙️ Per-service deep dive <span class="chip">${p.services.length} service${p.services.length!==1?'s':''}</span></summary>
+      <div class="expand-body">
+        ${p.services.length ? serviceQuickTable(p) + `<div style="margin-top:20px;padding-top:16px;border-top:1px solid #eef1f7"></div>` + tabs(p) + serviceDetail(p.services[STATE.curService]) : '<div class="notconfig">No services registered.</div>'}
+      </div>
+    </details>`;
+
+  document.getElementById("content").innerHTML = execLayer + detailedLayer + `<div style="height:40px"></div>` + `<div style="display:none">${renderStrip(p)}${projectSidebar(p)}</div>
+  </div>`;
+}
+
+// ============================ Datadog alerts panel ============================
+function _esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function _ago(ts){
+  if(!ts) return '—';
+  const s = Date.now()/1000 - ts;
+  if(s < 0) return 'just now';
+  const d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60);
+  if(d>0) return `${d}d ago`;
+  if(h>0) return `${h}h ago`;
+  return `${m||1}m ago`;
+}
+function _dur(h){
+  if(h==null) return '—';
+  if(h < 1) return `${Math.round(h*60)}m`;
+  if(h < 24) return `${h.toFixed(1)}h`;
+  return `${(h/24).toFixed(1)}d`;
+}
+function datadogAlertsSection(p){
+  const a = STATE.alerts;
+  if(a==null) return `<div class="loading">Loading Datadog alert history…</div>`;
+  if(a.error) return `<div class="unavailable">Datadog alerts unavailable — ${_esc(a.error)}</div>`;
+  const configured = (a.services||[]).some(s=>s.configured);
+  if(!configured) return `<div class="notconfig">No Datadog service tags configured for this project's services.</div>`;
+  return datadogVPStrip(a) + datadogOpsDetail(a);
+}
+
+// ---- VP view: one-line verdict + 4 leadership cards with prior-window trend ---
+function _effScope(a){
+  // Honour the toggle, but fall back to all-envs when a project has no
+  // production alerts (so the default 'prod' view is never empty).
+  return (STATE.ddScope === "prod" && (a.vp||{}).has_prod) ? "prod" : "all";
+}
+function _scopedVP(a){
+  const vp = a.vp || {};
+  const scope = _effScope(a);
+  return { scope, cur: vp[scope] || {}, prev: vp[scope + "_prev"] || {} };
+}
+function _scopedTop(a){
+  const top = a.top || [];
+  return _effScope(a) === "prod" ? top.filter(t => t.is_prod === true) : top;
+}
+function _pctDelta(cur, prev, lowerBetter){
+  if(cur==null || prev==null || prev===0) return `<span style="color:#cbd5e1;font-size:11px">no prior data</span>`;
+  const d = Math.round((cur-prev)/prev*100);
+  if(d===0) return `<span style="color:#94a3b8;font-size:11px">±0% vs prior</span>`;
+  const up = d>0, good = lowerBetter ? !up : up;
+  const col = good ? '#16a34a' : '#dc2626';
+  return `<span style="color:${col};font-size:11px;font-weight:800">${up?'▲':'▼'} ${Math.abs(d)}%</span> <span style="color:#94a3b8;font-size:11px">vs prior ${a_wd()}d</span>`;
+}
+let _WD = 0; function a_wd(){ return _WD; }
+function _vpCard(v, k, sub, vcolor){
+  return `<div class="card"><div class="v" style="${vcolor?`color:${vcolor}`:''}">${v}</div>
+    <div class="k">${k}</div><div style="margin-top:6px;min-height:16px">${sub||''}</div></div>`;
+}
+function datadogVPStrip(a){
+  const {scope, cur, prev} = _scopedVP(a);
+  _WD = a.window_days;
+  const open = cur.still_open||0, openP = cur.open_p1p2||0;
+  const ownPct = cur.monitors_fired ? Math.round(100*cur.unowned_monitors/cur.monitors_fired) : 0;
+
+  let tier = 'GREEN';
+  if(openP>0) tier='RED'; else if(open>0 || ownPct>=50) tier='AMBER';
+  const tcol = {GREEN:'#16a34a',AMBER:'#d97706',RED:'#dc2626'}[tier];
+  const tlabel = {GREEN:'Healthy',AMBER:'Watch',RED:'At risk'}[tier];
+  const scopeLabel = scope==='prod' ? 'production' : 'all environments';
+
+  const bits = [];
+  bits.push(`<b>${open}</b> alert${open!==1?'s':''} open`);
+  bits.push(`<b style="color:${openP>0?'#dc2626':'inherit'}">${openP}</b> P1/P2`);
+  if(cur.mttr_hours_median!=null) bits.push(`median resolution <b>${_dur(cur.mttr_hours_median)}</b>`);
+  bits.push(`<b style="color:${ownPct>=50?'#d97706':'inherit'}">${ownPct}%</b> of firing monitors unowned`);
+
+  const verdict = `<div style="display:flex;align-items:center;gap:14px;background:${tcol}12;border:1px solid ${tcol}44;border-left:5px solid ${tcol};border-radius:12px;padding:14px 18px">
+    <span style="width:12px;height:12px;border-radius:50%;background:${tcol};flex:none;box-shadow:0 0 0 4px ${tcol}22"></span>
+    <div style="flex:1">
+      <div style="font-weight:800;font-size:15px;color:#1f2937">${_esc(a.name||'Service')} reliability (${scopeLabel}) · <span style="color:${tcol}">${tlabel}</span></div>
+      <div style="font-size:12.5px;color:#475569;margin-top:3px">${bits.join(' · ')}</div>
+    </div>
+    ${(()=>{const u=(a.services||[]).map(s=>s.manage_url).find(Boolean);return u?`<a href="${u}" target="_blank" rel="noopener" style="flex:none;text-decoration:none;border:1px solid ${tcol};background:#fff;color:${tcol};border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap">Open in Datadog ↗</a>`:'';})()}
+  </div>`;
+
+  const hasProd = (a.vp||{}).has_prod;
+  const seg = (val,label)=>`<button onclick="STATE.ddScope='${val}';STATE.topPage=0;render()"
+    style="border:1px solid #cbd5e1;background:${STATE.ddScope===val?'#1f3864':'#fff'};color:${STATE.ddScope===val?'#fff':'#475569'};
+    padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;${val==='all'?'border-radius:8px 0 0 8px':'border-radius:0 8px 8px 0;border-left:none'}">${label}</button>`;
+  const toggle = hasProd ? `<div style="display:flex;justify-content:flex-end;margin-top:12px">
+      <div style="display:flex">${seg('all','All environments')}${seg('prod','Production only')}</div>
+    </div>` : '';
+
+  const cards = `<div class="cards" style="margin-top:12px">
+    ${_vpCard(open, 'Open now', `${openP} P1/P2 · still firing`, open? (openP>0?'#dc2626':'#d97706') : '#16a34a')}
+    ${_vpCard(cur.triggered||0, `Alerts fired (${a.window_days}d)`, _pctDelta(cur.triggered, prev.triggered, true))}
+    ${_vpCard(_dur(cur.mttr_hours_median), 'Median resolution', `${_pctDelta(cur.mttr_hours_median, prev.mttr_hours_median, true)}${cur.mttr_p1p2_median!=null?` · P1/P2 ${_dur(cur.mttr_p1p2_median)}`:''}`)}
+    ${_vpCard(`${cur.unowned_monitors||0}<span style="font-size:15px;color:#94a3b8">/${cur.monitors_fired||0}</span>`, 'Monitors unowned', `${ownPct}% no team · ${cur.noise_pct==null?'—':cur.noise_pct+'% '}auto-cleared &lt;5m`, ownPct>=50?'#d97706':null)}
+  </div>`;
+
+  const caveat = `<div style="font-size:11px;color:#94a3b8;margin-top:10px;line-height:1.6">
+    "Resolution" is monitor <b>auto-recovery time</b> (trigger → recover), not incident-tool MTTR. "Unowned" = firing monitors with no Slack/PagerDuty/on-call notification target. Trends compare the current ${a.window_days}d against the prior ${a.window_days}d.
+  </div>`;
+
+  return verdict + toggle + cards + caveat;
+}
+function datadogOpsDetail(a){
+  const n = _scopedTop(a).length;
+  return `<details style="margin-top:20px;border-top:1px solid #eef1f7;padding-top:14px">
+    <summary style="cursor:pointer;font-size:13px;color:#475569;font-weight:700;list-style:none">▸ Operational detail — top alerts (${n})</summary>
+    <div style="margin-top:10px"><div id="topAlertsWrap">${topAlertsInner(a)}</div></div>
+  </details>`;
+}
+
+// Top alerts: open, resolved-manually, or occurring frequently — ranked by
+// priority (P1 first), paginated 10 per page, with owner + any comments.
+const TOP_PAGE_SIZE = 10;
+function _ownerChips(owners, comments){
+  const chips = [];
+  (owners||[]).slice(0,3).forEach(o=>{
+    const h = String(o||'');
+    const col = /^slack-/i.test(h) ? '#4a154b'
+              : /pagerduty|opsgenie|oncall/i.test(h) ? '#c2410c'
+              : /@/.test(h) ? '#1f3864' : '#334155';
+    chips.push(`<span class="badge" style="background:#f1f5f9;color:${col};margin:1px 2px 1px 0">@${_esc(h.replace(/^@/,''))}</span>`);
+  });
+  (comments||[]).slice(0,3).forEach(c=>{
+    const who = c.who ? '@'+_esc(String(c.who).replace(/^@/,'')) : 'comment';
+    const tip = c.text ? ` title="${_esc(c.text)}"` : '';
+    chips.push(`<span class="badge" style="background:#ecfdf5;color:#065f46;margin:1px 2px 1px 0"${tip}>comment · ${who}</span>`);
+  });
+  return chips.length ? chips.join("") : `<span style="color:#cbd5e1">—</span>`;
+}
+function gotoTopPage(delta){
+  const a = STATE.alerts; if(!a) return;
+  const n = _scopedTop(a).length;
+  const pages = Math.max(1, Math.ceil(n / TOP_PAGE_SIZE));
+  STATE.topPage = Math.min(pages-1, Math.max(0, (STATE.topPage||0) + delta));
+  const wrap = document.getElementById("topAlertsWrap");
+  if(wrap) wrap.innerHTML = topAlertsInner(a);
+}
+function topAlertsInner(a){
+  const all = _scopedTop(a);
+  const reasonBadge = {
+    open:     `<span class="badge err">OPEN</span>`,
+    manual:   `<span class="badge" style="background:#e0e7ff;color:#3730a3">Manual&nbsp;resolve</span>`,
+    frequent: `<span class="badge" style="background:#fef3c7;color:#92400e">Frequent</span>`,
+  };
+  const pages = Math.max(1, Math.ceil(all.length / TOP_PAGE_SIZE));
+  const page = Math.min(STATE.topPage||0, pages-1);
+  const start = page * TOP_PAGE_SIZE;
+  const slice = all.slice(start, start + TOP_PAGE_SIZE);
+  const rows = slice.map((t,i)=>{
+    const pc = (t.priority<=2)?'#dc2626':(t.priority==3)?'#d97706':'#64748b';
+    const nm = t.monitor_url
+      ? `<a href="${t.monitor_url}" target="_blank" rel="noopener" style="color:#1f3864;text-decoration:none;font-weight:600">${_esc(t.name)} ↗</a>`
+      : `<span style="font-weight:600">${_esc(t.name)}</span>`;
+    const reasons = (t.reasons||[]).map(r=>reasonBadge[r]||'').join(' ');
+    return `<tr style="border-top:1px solid #eef1f7">
+      <td style="padding:8px;text-align:center;color:#94a3b8;font-variant-numeric:tabular-nums">${start+i+1}</td>
+      <td style="padding:8px;text-align:center"><span class="pill" style="background:${pc}">P${t.priority??'?'}</span></td>
+      <td style="padding:8px">${nm}<div style="font-size:11px;color:#94a3b8">${_esc(t.service||'')}</div></td>
+      <td style="padding:8px">${reasons}</td>
+      <td style="padding:8px;text-align:center;font-variant-numeric:tabular-nums">${t.count||0}</td>
+      <td style="padding:8px;text-align:center;font-variant-numeric:tabular-nums">${t.open_count||0} <span style="color:#cbd5e1">/</span> ${t.manual_resolved||0} <span style="color:#cbd5e1">/</span> ${t.auto_resolved||0}</td>
+      <td style="padding:8px;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums">${_dur(t.mttr_hours_median)}</td>
+      <td style="padding:8px;white-space:nowrap;color:#475569">${_ago(t.last_triggered)}</td>
+      <td style="padding:8px;line-height:1.9">${_ownerChips(t.owners, t.comments)}</td>
+    </tr>`;
+  }).join("");
+  const table = `<table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:13px">
+    <thead><tr style="text-align:left;color:#64748b;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em">
+      <th style="padding:6px 8px;text-align:center">#</th>
+      <th style="padding:6px 8px;text-align:center">Pri</th>
+      <th style="padding:6px 8px">Alert / monitor</th>
+      <th style="padding:6px 8px">Why it's here</th>
+      <th style="padding:6px 8px;text-align:center">Fires</th>
+      <th style="padding:6px 8px;text-align:center">Open&nbsp;/&nbsp;Man&nbsp;/&nbsp;Auto</th>
+      <th style="padding:6px 8px;text-align:center">Median&nbsp;resolution&nbsp;time</th>
+      <th style="padding:6px 8px">Last&nbsp;fired</th>
+      <th style="padding:6px 8px">Owner&nbsp;/&nbsp;notified</th>
+    </tr></thead>
+    <tbody>${rows || `<tr><td colspan="9" style="padding:14px;color:#94a3b8">No open, manually-resolved, or frequently-firing alerts in this window.</td></tr>`}</tbody>
+  </table>`;
+  const from = all.length ? start+1 : 0;
+  const to = Math.min(start + TOP_PAGE_SIZE, all.length);
+  const pgBtn = (label, delta, disabled)=>{
+    const base = "border:1px solid #cbd5e1;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;";
+    const on = "background:#1f3864;color:#fff;cursor:pointer;";
+    const off = "background:#f1f5f9;color:#cbd5e1;cursor:not-allowed;";
+    return `<button ${disabled?'disabled':''} onclick="gotoTopPage(${delta})" style="${base}${disabled?off:on}">${label}</button>`;
+  };
+  const pager = `<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px;color:#64748b">
+    <span>Showing <b>${from}\u2013${to}</b> of <b>${all.length}</b> · page ${page+1}/${pages}</span>
+    <span style="display:flex;gap:8px">
+      ${pgBtn('← Prev', -1, page<=0)}
+      ${pgBtn('Next 10 →', 1, page>=pages-1)}
+    </span>
+  </div>`;
+  const note = `<div style="font-size:11px;color:#94a3b8;margin-top:8px;line-height:1.6">
+    Ranked by <b>priority</b> (P1 → P2 → P3 …), then attention (currently <b>open</b> &gt; <b>manually resolved</b> &gt; <b>frequently firing</b>, &ge;3 fires in window).
+    <b>Owner / notified</b> comes from each monitor's notification handles (Slack channel, PagerDuty, on-call, email) or its creator; green <i>comment</i> chips are human comments posted on the alert (hover for text). Datadog monitor alerts have no per-alert assignee field.
+  </div>`;
+  return table + pager + note;
+}
+
+function renderStrip(p){
+  const c={}; p.services.forEach(s => c[s.tier]=(c[s.tier]||0)+1);
+  return `<div class="strip">${[["GREEN","Growth-ready"],["AMBER","Conditional"],["DEFERRED","Deferred"],["RED","Blocked"]]
+    .map(([t,l])=>`<div class="stat"><div class="n" style="color:${TIERS[t].color}">${c[t]||0}</div><div class="l">${l} services</div><div class="bar" style="background:${TIERS[t].color}"></div></div>`).join("")}</div>`;
+}
+function projectSidebar(p){
+  const t=TIERS[p.tier];
+  return `<ul class="plist"><li class="active"><span class="pill" style="background:${t.color}">${p.tier}</span>
+    <div style="flex:1"><div style="font-weight:700;font-size:15px">${p.name} <span style="color:#94a3b8;font-weight:600">· ${p.key}</span></div>
+    <div style="font-size:12px;color:#64748b">${p.services.length} service(s) · ${p.rollup.critical_gaps_total} crit · ${p.rollup.standard_gaps_total} std gaps</div></div></li></ul>`;
+}
+function projectHeader(p){
+  // legacy — no longer rendered directly; execHero replaces it. Kept for compatibility.
+  return "";
+}
+
+// -------- Executive recommendation logic --------
+function windowLabelFor(p){
+  return (WINDOWS.find(w=>w.v===(p.window_days||0))||{}).label || "All time";
+}
+function computeRecommendation(p){
+  const critCount = p.rollup.critical_gaps_total;
+  const stdCount  = p.rollup.standard_gaps_total;
+  if (p.tier === "RED")
+    return `<b>Do not accept.</b> ${critCount} Critical item${critCount>1?'s':''} to remediate first.`;
+  if (p.tier === "AMBER")
+    return `<b>Conditionally accept.</b> ${stdCount} gap${stdCount>1?'s':''} to close in 30 days.`;
+  if (p.tier === "DEFERRED")
+    return `<b>Defer.</b> ${stdCount} gaps exceed Amber threshold.`;
+  return `<b>Accept.</b> All gates clear — proceed to transition plan.`;
+}
+function tierIcon(tier){
+  return {RED:'🚫',AMBER:'⚠️',GREEN:'✅',DEFERRED:'⏸️'}[tier] || '•';
+}
+
+function execHero(p){
+  const t = TIERS[p.tier];
+  return `<div class="exec-hero">
+    <div class="verdict" style="background:${t.color}">
+      <div class="icon">${tierIcon(p.tier)}</div>
+      <div class="lbl">Recommendation</div>
+      <div class="tier">${p.tier}</div>
+      <div style="font-size:12px;opacity:.85">${t.label.split('—')[1]?.trim() || t.label}</div>
+    </div>
+    <div>
+      <h1 class="projname">${p.name} <span style="color:#94a3b8;font-weight:600">· ${p.key}</span></h1>
+      <div class="meta">${p.services.length} service${p.services.length===1?'':'s'} · reviewing <b>${windowLabelFor(p)}</b> · generated ${new Date(p.generated_at).toLocaleString()}</div>
+      <div class="reco">${computeRecommendation(p)}</div>
+      ${scoringExplainerPanel(p)}
+    </div>
+  </div>`;
+}
+
+// ---------- Why did this project get its tier? ----------
+function whyThisTier(p){
+  const critGaps = [];
+  const stdGaps = [];
+  const strategicFails = [];
+  (p.services || []).forEach(s => {
+    (s.gates?.critical_gaps || []).forEach(g => critGaps.push({service: s.name, txt: g}));
+    (s.gates?.standard_gaps || []).forEach(g => stdGaps.push({service: s.name, txt: g}));
+    if (s.gates?.strategic_fail) strategicFails.push({service: s.name});
+  });
+  // Security gaps are intentionally NOT included in tier reasoning. Security debt
+  // is a compliance obligation that transfers with the project, not an onboarding gate.
+  const tier = p.tier;
+  if (tier === "RED"){
+    return `<b>This project is RED because ${critGaps.length} Critical hard-fail item(s) triggered</b> across services. Any single Critical blocks acceptance.
+      <ul style="margin:6px 0 0 18px;padding:0">
+        ${critGaps.slice(0,5).map(g=>`<li style="margin:3px 0"><b>${g.service}</b>: ${g.txt}</li>`).join("")}
+        ${critGaps.length>5?`<li style="color:#94a3b8">+ ${critGaps.length-5} more Critical items</li>`:""}
+      </ul>`;
+  }
+  if (tier === "AMBER"){
+    return `<b>This project is AMBER because ${stdGaps.length} standard gap(s) fell in the 1–6 range</b> — the conditional-accept band.
+      <ul style="margin:6px 0 0 18px;padding:0">
+        ${stdGaps.slice(0,5).map(g=>`<li style="margin:3px 0"><b>${g.service}</b>: ${g.txt}</li>`).join("")}
+        ${stdGaps.length>5?`<li style="color:#94a3b8">+ ${stdGaps.length-5} more</li>`:""}
+      </ul>`;
+  }
+  if (tier === "DEFERRED"){
+    return `<b>This project is DEFERRED because ${stdGaps.length} standard gaps exceed the Amber threshold (max 6)</b> — too many open items to accept conditionally.`;
+  }
+  if (tier === "GREEN"){
+    return `<b>This project is GREEN because every gate passed</b> — no Critical hard-fails, no Standard gap thresholds crossed.`;
+  }
+  return `Tier: ${tier}`;
+}
+
+function scoringExplainerPanel(p){
+  return `<details style="margin-top:14px;background:rgba(255,255,255,.85);border:1px solid #e2e8f0;border-radius:10px;overflow:hidden">
+    <summary style="padding:10px 14px;cursor:pointer;font-size:12px;font-weight:700;color:#334155;list-style:none">
+      <span style="color:#94a3b8;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase">How is this scored?</span> — click to expand
+    </summary>
+    <div style="padding:14px 18px 18px;font-size:13px;color:#334155;line-height:1.55">
+      <div style="padding:12px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid ${TIERS[p.tier].color};margin-bottom:14px">
+        ${whyThisTier(p)}
+      </div>
+
+      <div style="margin-top:16px"><b style="color:#1f3864">The 4 tier bands (project rollup)</b></div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px">
+        <tr style="background:#fef2f2"><td style="padding:6px 10px;width:100px;font-weight:800;color:#b91c1c">🚫 RED</td><td style="padding:6px 10px">Any <b>Critical hard-fail</b> in any service. Do not accept.</td></tr>
+        <tr style="background:#fffbeb"><td style="padding:6px 10px;font-weight:800;color:#a16207">⚠️ AMBER</td><td style="padding:6px 10px"><b>1–6 Standard gaps</b> across all services. Conditionally accept with a remediation window.</td></tr>
+        <tr style="background:#f8fafc"><td style="padding:6px 10px;font-weight:800;color:#475569">⏸️ DEFERRED</td><td style="padding:6px 10px"><b>7+ Standard gaps</b>. Too many open items — Global team must reduce first.</td></tr>
+        <tr style="background:#f0fdf4"><td style="padding:6px 10px;font-weight:800;color:#15803d">✅ GREEN</td><td style="padding:6px 10px"><b>0 Critical, 0 Standard.</b> All gates clear.</td></tr>
+      </table>
+
+      <div style="margin-top:16px"><b style="color:#1f3864">What's a Critical hard-fail?</b></div>
+      <ul style="margin:6px 0 0 18px;padding:0;font-size:12.5px">
+        <li>Any open <b>Critical-severity vulnerability</b> (Risk Rating = Critical, from CBE)</li>
+        <li>Any Critical vulnerability past its <b>${14}-day SLA</b></li>
+        <li>Any Datadog monitor with <b>branch protection disabled</b> on main (Gate 2E.1)</li>
+        <li>Missing <b>branch protection</b> on main (Gate 2E.1)</li>
+      </ul>
+
+      <div style="margin-top:16px"><b style="color:#1f3864">What's a Standard gap? (one common threshold set)</b></div>
+      <table style="width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px">
+        <thead><tr style="background:#f1f5f9">
+          <th style="text-align:left;padding:6px 10px;font-weight:700">Signal</th>
+          <th style="text-align:center;padding:6px 6px;font-weight:700;color:#1f3864">Threshold</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:5px 10px">Reopen rate</td>              <td style="text-align:center">&lt; 5%</td></tr>
+          <tr><td style="padding:5px 10px">Cycle time (p90)</td>          <td style="text-align:center">≤ 25d</td></tr>
+          <tr><td style="padding:5px 10px">PR merge time (median)</td>   <td style="text-align:center">≤ 16h</td></tr>
+          <tr><td style="padding:5px 10px">PR review coverage</td>       <td style="text-align:center">≥ 85%</td></tr>
+          <tr><td style="padding:5px 10px">Muted Datadog monitors</td>   <td style="text-align:center">≤ 3</td></tr>
+          <tr><td style="padding:5px 10px">Feature share (80/20 growth)</td>   <td style="text-align:center">≥ 80%</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:#64748b;margin-top:10px">Anything worse than these thresholds counts as one <b>Standard gap</b>. Same bar for every service. Configured in <code>metrics.py</code>.</p>
+
+      <div style="margin-top:16px"><b style="color:#1f3864">Project rollup: worst-service-wins</b></div>
+      <p style="font-size:12.5px;color:#475569;margin-top:6px">Each of the ${p.services.length} services gets its own tier. The <b>project tier</b> is the worst tier among them — a single RED service makes the whole project RED, even if the other ${p.services.length-1} are GREEN. Reason: the India team inherits the project as one bundle; a Critical item on any service is an inherited risk.</p>
+
+      <p style="font-size:11px;color:#94a3b8;margin-top:14px;padding-top:10px;border-top:1px solid #eef1f7">
+        Time-window filter applied to Jira signals: ${windowLabelFor(p)}. Vulnerabilities scoped to CBE. Data hygiene note: any signal only produces a tier verdict where the underlying source is <code>LIVE</code> — sources marked <code>not configured</code> are silently skipped.
+      </p>
+    </div>
+  </details>`;
+}
+
+// -------- Headline cards: security, customer, delivery --------
+function headlineCards(p){
+  const pv = p.project_view || {};
+  const sec = pv.security || {};
+  const cust = pv.customer_issues || {};
+
+  // ---- Security card ----
+  let secCard;
+  const secStatus = (pv.source_status||{}).security;
+  if (secStatus === "ok") {
+    const critOpen = (sec.open_by_severity||{}).Critical || 0;
+    const highOpen = (sec.open_by_severity||{}).High || 0;
+    const slaBreach = ((sec.sla||{}).critical_breached||0) + ((sec.sla||{}).high_breached||0);
+    const cls = critOpen > 0 ? "critical" : (highOpen > 0 || slaBreach > 0 ? "warning" : "ok");
+    const note = critOpen > 0 ? `${critOpen} Critical vulnerabilit${critOpen>1?'ies':'y'} open` :
+                 slaBreach > 0 ? `${slaBreach} past SLA` :
+                 highOpen > 0 ? `${highOpen} High open` :
+                 "All clear";
+    secCard = `<div class="hcard ${cls}">
+      <div class="htitle">🛡️ Security Debt</div>
+      <div class="hbig">${sec.open_vulnerabilities || 0}</div>
+      <div class="hsub">Open vulnerabilities across ${p.services.length} service${p.services.length>1?'s':''}</div>
+      <div class="hnote">${note}</div>
+    </div>`;
+  } else if (secStatus === "not_configured" || !secStatus) {
+    secCard = `<div class="hcard"><div class="htitle">🛡️ Security</div><div class="hsub" style="margin-top:14px">Not configured</div></div>`;
+  } else {
+    secCard = `<div class="hcard critical"><div class="htitle">🛡️ Security</div>
+      <div class="hbig" style="font-size:24px">Error</div>
+      <div class="hsub" style="font-size:11px;word-break:break-all;color:#b91c1c" title="${secStatus.replace(/"/g,'&quot;')}">${secStatus.length > 100 ? secStatus.slice(0,100)+'…' : secStatus}</div>
+    </div>`;
+  }
+
+  // ---- Customer card ----
+  let custCard;
+  const custStatus = (pv.source_status||{}).customer_issues;
+  if (custStatus === "ok") {
+    const lvls = cust.severity_levels || ["Highest","High","Medium","Low"];
+    const top1Open = (cust.open_by_severity||{})[lvls[0]] || 0;
+    const top2Open = (cust.open_by_severity||{})[lvls[1]] || 0;
+    const slaBreach = ((cust.sla||{}).top1_breached||0) + ((cust.sla||{}).top2_breached||0);
+    const cls = top1Open > 0 ? "critical" : (top2Open > 0 || slaBreach > 0 ? "warning" : "ok");
+    const note = top1Open > 0 ? `${top1Open} ${lvls[0]} open` :
+                 slaBreach > 0 ? `${slaBreach} past SLA` :
+                 top2Open > 0 ? `${top2Open} ${lvls[1]} open` :
+                 "All clear";
+    custCard = `<div class="hcard ${cls}">
+      <div class="htitle">📞 Customer Escalations</div>
+      <div class="hbig">${cust.open || 0}</div>
+      <div class="hsub">Open customer-reported issues in window</div>
+      <div class="hnote">${note}</div>
+    </div>`;
+  } else if (custStatus === "not_configured" || !custStatus) {
+    custCard = `<div class="hcard"><div class="htitle">📞 Customer Issues</div><div class="hsub" style="margin-top:14px">Not configured</div></div>`;
+  } else {
+    // status is an error string — show it so user can diagnose
+    custCard = `<div class="hcard critical"><div class="htitle">📞 Customer Issues</div>
+      <div class="hbig" style="font-size:24px">Error</div>
+      <div class="hsub" style="font-size:11px;word-break:break-all;color:#b91c1c" title="${custStatus.replace(/"/g,'&quot;')}">${custStatus.length > 100 ? custStatus.slice(0,100)+'…' : custStatus}</div>
+    </div>`;
+  }
+
+  // ---- Delivery card ----
+  const critSvcs = p.services.filter(s => s.tier === "RED").length;
+  const amberSvcs = p.services.filter(s => s.tier === "AMBER").length;
+  const greenSvcs = p.services.filter(s => s.tier === "GREEN").length;
+  const cls = critSvcs > 0 ? "critical" : (amberSvcs > 0 ? "warning" : "ok");
+  const bigNum = critSvcs > 0 ? critSvcs : (amberSvcs > 0 ? amberSvcs : greenSvcs);
+  const bigLbl = critSvcs > 0 ? "service(s) blocked" : (amberSvcs > 0 ? "service(s) conditional" : "services ready");
+  const note = critSvcs > 0 ? `${critSvcs} RED · ${amberSvcs} AMBER · ${greenSvcs} GREEN` :
+               amberSvcs > 0 ? `${amberSvcs} AMBER · ${greenSvcs} GREEN` :
+               `All ${greenSvcs} services green`;
+  const delCard = `<div class="hcard ${cls}">
+    <div class="htitle">⚙️ Service Readiness</div>
+    <div class="hbig">${bigNum}</div>
+    <div class="hsub">${bigLbl}</div>
+    <div class="hnote">${note}</div>
+  </div>`;
+
+  // ---- Growth-alignment card (80/20 rule) ----
+  // NOTE: This is a ticket-mix proxy (features vs bugs+tasks), not a true velocity KPI.
+  const growthTh = 80;   // uniform 80% target across every service — one bar for all
+  const svcsWithJira = p.services.filter(s => (s.source_status||{}).jira === "ok");
+  const svcsBelow = svcsWithJira.filter(s => (s.roadmap?.feature_pct ?? 100) < growthTh);
+  const avgFeat = svcsWithJira.length
+    ? Math.round(svcsWithJira.reduce((a,s) => a + (s.roadmap?.feature_pct ?? 0), 0) / svcsWithJira.length)
+    : null;
+  let growthCard;
+  if (svcsWithJira.length === 0){
+    growthCard = `<div class="hcard"><div class="htitle">📈 Growth Alignment</div><div class="hsub" style="margin-top:14px">Jira not configured</div></div>`;
+  } else {
+    const clsG = svcsBelow.length >= 3 ? "critical" : (svcsBelow.length > 0 ? "warning" : "ok");
+    const noteG = svcsBelow.length === 0
+      ? `Avg ${avgFeat}% feature-work · all services meet 80/20`
+      : `${svcsBelow.length} service${svcsBelow.length>1?'s':''} below 80% feature-work`;
+    growthCard = `<div class="hcard ${clsG}" title="Ticket-mix proxy: features / (features + bugs + tasks). Not a true velocity KPI — measures work-type ratio, not shipped scale.">
+      <div class="htitle">📈 Growth Alignment <span style="font-size:9px;color:#94a3b8">(ticket-mix)</span></div>
+      <div class="hbig">${svcsBelow.length}</div>
+      <div class="hsub">Services below 80/20 target (avg ${avgFeat}% feature)</div>
+      <div class="hnote">${noteG}</div>
+    </div>`;
+  }
+
+  return `<div class="headline-row">${secCard}${custCard}${delCard}${growthCard}</div>`;
+}
+
+// -------- Top risks: operational onboarding risks only --------
+// Security debt is a compliance obligation with its own SLA clock — not an
+// onboarding risk. It transfers to the receiving team as-is; the security
+// team will pursue those tickets regardless of who owns the code. So
+// vulnerabilities are surfaced in "Overall Project Health" only, NOT here.
+// Top Risks focuses on operational readiness: customer escalations,
+// delivery discipline (branch protection, review coverage, monitors),
+// systemic quality issues (reopens, cycle time).
+function topRisks(p){
+  const risks = [];
+  // Filter out any gate items with security wording — those belong in the
+  // Inherited Security Debt view, not the operational risks panel.
+  const isSecurityText = (txt) => /vulnerab|Critical past|High past/i.test(txt || "");
+
+  p.services.forEach((s, i) => {
+    const cust = s.customer_issues || {};
+    const src = s.source_status || {};
+
+    // Highest customer issues — operational, affects onboarding readiness
+    const lvls = cust.severity_levels || ["Highest","High"];
+    const topOpen = (cust.open_by_severity||{})[lvls[0]] || 0;
+    if (src.customer_issues === "ok" && topOpen > 0){
+      const aging = cust.aging || {};
+      risks.push({priority: 700 + topOpen, who: `${s.name}`,
+        what: `${topOpen} ${lvls[0]}-priority customer issue${topOpen>1?'s':''} open`,
+        why: aging.oldest_open_key ? `Oldest: ${aging.oldest_open_key} — ${aging.oldest_open_days}d old` : "",
+        sev: "critical", serviceIdx: i});
+    }
+    // Any non-security critical gate items surfaced by metrics.py
+    (s.gates?.critical_gaps || []).filter(g => !isSecurityText(g)).forEach(g => {
+      risks.push({priority: 600, who: `${s.name}`, what: g,
+        why: "Critical hard-fail — blocks tier progression", sev: "critical", serviceIdx: i});
+    });
+  });
+
+  risks.sort((a,b) => b.priority - a.priority);
+  const top = risks.slice(0, 3);   // exec view: top 3 only
+
+  if (top.length === 0){
+    return `<div class="risk-panel">
+      <h2>Top Onboarding Risks</h2>
+      <div class="clean">✅ No blocking risks identified in the current window. All measurable gates clear.</div>
+    </div>`;
+  }
+  return `<div class="risk-panel">
+    <h2>Top Onboarding Risks <span class="cnt">${risks.length}</span></h2>
+    ${top.map((r,i) => `
+      <div class="risk-item clickable" onclick="${r.serviceIdx==null?'return false':`STATE.curService=${r.serviceIdx};render();window.scrollTo({top:document.querySelector('.tabs')?.offsetTop||0,behavior:'smooth'})`}">
+        <div class="num">${i+1}</div>
+        <div class="body">
+          <div class="who">${r.who}</div>
+          <div class="what">${r.what}</div>
+          ${r.why ? `<div class="why">${r.why}</div>` : ""}
+        </div>
+        <div class="sev ${r.sev}">${r.sev}</div>
+        <div class="go">→</div>
+      </div>`).join("")}
+    ${risks.length > 3 ? `<details style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#64748b;padding:6px 0">+ ${risks.length - 3} more risk${risks.length - 3>1?'s':''}</summary>
+      ${risks.slice(3).map((r,i) => `
+        <div class="risk-item clickable" onclick="${r.serviceIdx==null?'return false':`STATE.curService=${r.serviceIdx};render()`}">
+          <div class="num" style="color:#94a3b8">${i+4}</div>
+          <div class="body">
+            <div class="who">${r.who}</div>
+            <div class="what">${r.what}</div>
+          </div>
+          <div class="sev ${r.sev}">${r.sev}</div>
+        </div>`).join("")}
+    </details>` : ""}
+  </div>`;
+}
+function num(v,u=""){ return v==null? '<span style="color:#94a3b8">—</span>' : v+u; }
+function kv(k,v,c){ return `<div class="kv"><span class="kk">${k}</span><span class="vv ${c||''}">${v==null?'—':v}</span></div>`; }
+function srcBadge(s){
+  if(s==="ok") return `<span class="badge ok">LIVE</span>`;
+  if(s==="not_configured") return `<span class="badge nc">not configured</span>`;
+  if(s==="placeholder") return `<span class="badge nc">placeholder</span>`;
+  return `<span class="badge err" title="${(s||'').replace(/"/g,'&quot;')}">error</span>`;
+}
+function securitySection(pv, srcObj, headingSuffix){
+  const st = (srcObj || {}).security;
+  if(!st || st === "not_configured") return "";
+  if(st !== "ok" && st !== "placeholder"){
+    return `<div class="section" style="background:#fef2f2"><h3 style="color:#b91c1c">🛡️ Security ${headingSuffix||""} — unavailable</h3><div class="unavailable">${st}</div></div>`;
+  }
+  const s = pv.security || {};
+  if(s.enabled === false) return "";
+  const sev = s.open_by_severity || {};
+  const aging = s.aging || {};
+  const sla = s.sla || {};
+  const critOpen = sev.Critical || 0, highOpen = sev.High || 0, modOpen = sev.Moderate || 0, lowOpen = sev.Low || 0;
+  const anyOpen = critOpen + highOpen + modOpen + lowOpen;
+  const alarming = critOpen > 0 || sla.critical_breached > 0 || sla.high_breached > 0;
+  const bg = alarming ? "background:#fef2f2" : (anyOpen ? "background:#fffbeb" : "background:#f0fdf4");
+  const border = alarming ? "border-left:4px solid #dc2626" : (anyOpen ? "border-left:4px solid #d97706" : "border-left:4px solid #16a34a");
+  const oldestNote = aging.oldest_open_days ?
+    `<div style="font-size:12px;color:#64748b;margin-top:10px">Oldest open: <b>${aging.oldest_open_key || '—'}</b> — <span style="color:#94a3b8">${aging.oldest_open_summary || ''}</span> · <b class="${aging.oldest_open_days>sla.critical_days?'bad':'warn'}">${aging.oldest_open_days} days</b> old</div>` : "";
+  return `<div class="section" style="${bg};${border}">
+    <h3 style="color:${alarming?'#b91c1c':'#334155'}">🛡️ Security Issues ${headingSuffix||''} ${anyOpen?`— <span class="${alarming?'bad':'warn'}">${anyOpen} open</span>`:'— clean'}</h3>
+    <div class="cards">
+      <div class="card"><div class="v">${num(s.total_vulnerabilities)}</div><div class="k">Total (in window)</div></div>
+      <div class="card"><div class="v ${s.open_vulnerabilities>0?'warn':'good'}">${num(s.open_vulnerabilities)}</div><div class="k">Open now</div></div>
+      <div class="card"><div class="v ${critOpen>0?'bad':'good'}">${critOpen}</div><div class="k">Critical open</div></div>
+      <div class="card"><div class="v ${highOpen>0?'warn':'good'}">${highOpen}</div><div class="k">High open</div></div>
+      <div class="card"><div class="v">${modOpen}</div><div class="k">Moderate open</div></div>
+      <div class="card"><div class="v">${lowOpen}</div><div class="k">Low open</div></div>
+      <div class="card"><div class="v ${(sla.critical_breached||0)>0?'bad':'good'}">${sla.critical_breached||0}</div><div class="k">Critical > ${sla.critical_days}d SLA</div></div>
+      <div class="card"><div class="v ${(sla.high_breached||0)>0?'warn':'good'}">${sla.high_breached||0}</div><div class="k">High > ${sla.high_days}d SLA</div></div>
+    </div>${oldestNote}
+    <p style="font-size:11px;color:#94a3b8;margin-top:10px">Source: <code>${(s.security_project_keys||[]).join(', ')}</code> · <code>issuetype = ${(s.issue_types||[]).join(',')}</code> · severity from <code>${s.severity_field||''}</code></p>
+  </div>`;
+}
+
+function customerSection(pv, srcObj, headingSuffix){
+  const st = (srcObj || {}).customer_issues;
+  if(!st || st === "not_configured") return "";
+  if(st !== "ok" && st !== "placeholder"){
+    return `<div class="section" style="background:#fef2f2"><h3 style="color:#b91c1c">📞 Customer Issues ${headingSuffix||''} — unavailable</h3><div class="unavailable">${st}</div></div>`;
+  }
+  const c = pv.customer_issues || {};
+  if(c.enabled === false) return "";
+  const levels = c.severity_levels || ["Highest","High","Medium","Low"];
+  const sev    = c.open_by_severity || {};
+  const sla    = c.sla || {};
+  const aging  = c.aging || {};
+
+  const anyOpen = levels.reduce((s, lv) => s + (sev[lv] || 0), 0);
+  const top1 = levels[0], top2 = levels[1];
+  const top1Open = sev[top1] || 0, top2Open = sev[top2] || 0;
+  const alarming = top1Open > 0 || (sla.top1_breached || 0) > 0;
+  const bg = alarming ? "background:#fef2f2" : (anyOpen ? "background:#fffbeb" : "background:#f0fdf4");
+  const border = alarming ? "border-left:4px solid #dc2626" : (anyOpen ? "border-left:4px solid #d97706" : "border-left:4px solid #16a34a");
+  const oldestNote = aging.oldest_open_days ?
+    `<div style="font-size:12px;color:#64748b;margin-top:10px">Oldest open: <b>${aging.oldest_open_key || '—'}</b> — <span style="color:#94a3b8">${aging.oldest_open_summary || ''}</span> · <b class="warn">${aging.oldest_open_days} days</b> old</div>` : "";
+
+  const sevCards = levels.map((lv, i) => {
+    const v = sev[lv] || 0;
+    const cls = i === 0 && v > 0 ? "bad" : (i === 1 && v > 0 ? "warn" : (v === 0 ? "good" : ""));
+    return `<div class="card"><div class="v ${cls}">${v}</div><div class="k">${lv} open</div></div>`;
+  }).join("");
+
+  return `<div class="section" style="${bg};${border}">
+    <h3 style="color:${alarming?'#b91c1c':'#334155'}">📞 Customer Reported Issues ${headingSuffix||''} ${anyOpen?`— <span class="${alarming?'bad':'warn'}">${anyOpen} open</span>`:'— clean'}</h3>
+    <div class="cards">
+      <div class="card"><div class="v">${num(c.total)}</div><div class="k">Total (in window)</div></div>
+      <div class="card"><div class="v ${c.open>0?'warn':'good'}">${num(c.open)}</div><div class="k">Open now</div></div>
+      ${sevCards}
+      <div class="card"><div class="v ${(sla.top1_breached||0)>0?'bad':'good'}">${sla.top1_breached||0}</div><div class="k">${top1||''} > ${sla.top1_days}d SLA</div></div>
+      <div class="card"><div class="v ${(sla.top2_breached||0)>0?'warn':'good'}">${sla.top2_breached||0}</div><div class="k">${top2||''} > ${sla.top2_days}d SLA</div></div>
+    </div>${oldestNote}
+    <p style="font-size:11px;color:#94a3b8;margin-top:10px">Source: <code>${(c.project_keys||[]).join(', ')}</code> excluding vulnerabilities · severity from <code>${c.severity_field||''}</code></p>
+  </div>`;
+}
+
+// ---- Leadership at-a-glance matrices ----
+function sevCell(n, level){
+  if (n == null) return `<td style="text-align:center;color:#cbd5e1">—</td>`;
+  const bg  = level === "bad" && n > 0 ? "#fee2e2" :
+              level === "warn" && n > 0 ? "#fef3c7" :
+              n === 0 ? "#f0fdf4" : "#f8fafc";
+  const fg  = level === "bad" && n > 0 ? "#b91c1c" :
+              level === "warn" && n > 0 ? "#a16207" :
+              n === 0 ? "#16a34a" : "#334155";
+  return `<td style="text-align:center;background:${bg};color:${fg};font-weight:800;font-size:16px">${n}</td>`;
+}
+function jiraLinkCell(url){
+  if(!url) return `<td></td>`;
+  return `<td style="text-align:center;padding:0 8px" onclick="event.stopPropagation()">
+    <a href="${url}" target="_blank" rel="noopener" title="Open in Jira"
+       style="text-decoration:none;color:#2e5496;font-weight:700;font-size:13px">↗</a>
+  </td>`;
+}
+
+function serviceRowSecurity(s){
+  const src = s.source_status || {};
+  if(src.security !== "ok"){
+    return `<tr>
+      <td style="font-weight:700">${s.name}</td>
+      <td style="text-align:center;color:#94a3b8" colspan="8">${src.security || 'not configured'}</td>
+    </tr>`;
+  }
+  const sec = s.security || {};
+  const sev = sec.open_by_severity || {};
+  const sla = sec.sla || {};
+  return `<tr onclick="STATE.curService=${(window._svcIdx||{})[s.name]};render()" style="cursor:pointer">
+    <td style="font-weight:700">${s.name}</td>
+    <td style="text-align:center;font-weight:700">${sec.total_vulnerabilities ?? '—'}</td>
+    <td style="text-align:center;font-weight:700">${sec.open_vulnerabilities ?? '—'}</td>
+    ${sevCell(sev.Critical || 0, "bad")}
+    ${sevCell(sev.High || 0, "warn")}
+    ${sevCell(sev.Moderate || 0, null)}
+    ${sevCell(sev.Low || 0, null)}
+    ${sevCell((sla.critical_breached||0) + (sla.high_breached||0), "bad")}
+    ${jiraLinkCell(sec.jira_ui_search_url)}
+  </tr>`;
+}
+function serviceRowCustomer(s){
+  const src = s.source_status || {};
+  if(src.customer_issues !== "ok"){
+    return `<tr>
+      <td style="font-weight:700">${s.name}</td>
+      <td style="text-align:center;color:#94a3b8" colspan="8">${src.customer_issues || 'not configured'}</td>
+    </tr>`;
+  }
+  const c = s.customer_issues || {};
+  const levels = c.severity_levels || ["Highest","High","Medium","Low"];
+  const sev = c.open_by_severity || {};
+  const sla = c.sla || {};
+  return `<tr onclick="STATE.curService=${(window._svcIdx||{})[s.name]};render()" style="cursor:pointer">
+    <td style="font-weight:700">${s.name}</td>
+    <td style="text-align:center;font-weight:700">${c.total ?? '—'}</td>
+    <td style="text-align:center;font-weight:700">${c.open ?? '—'}</td>
+    ${sevCell(sev[levels[0]] || 0, "bad")}
+    ${sevCell(sev[levels[1]] || 0, "warn")}
+    ${sevCell(sev[levels[2]] || 0, null)}
+    ${sevCell(sev[levels[3]] || 0, null)}
+    ${sevCell((sla.top1_breached||0) + (sla.top2_breached||0), "bad")}
+    ${jiraLinkCell(c.jira_ui_search_url)}
+  </tr>`;
+}
+
+function projectMatrixSection(p){
+  window._svcIdx = {};
+  p.services.forEach((s,i)=>{ window._svcIdx[s.name] = i; });
+  const custLevels = (p.services[0] && p.services[0].customer_issues && p.services[0].customer_issues.severity_levels) || ["Highest","High","Medium","Low"];
+  const secLevels  = ["Critical","High","Moderate","Low"];
+  const thStyle = 'text-align:center;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:8px 6px;background:#f8fafc;border-bottom:1px solid #e2e8f0';
+  const nameThStyle = thStyle + ';text-align:left;padding-left:16px';
+  const th = (label, wide=false) => `<th style="${wide?nameThStyle:thStyle}">${label}</th>`;
+
+  const secTable = `
+    <div class="section" style="border-left:4px solid #dc2626;background:#fefcfc">
+      <h3 style="color:#b91c1c;margin-bottom:12px">🛡️ Security Issues — Services at a glance <span style="font-weight:500;color:#64748b">(from ${(p.project_view?.security?.security_project_keys||['CBE']).join(',')} · in window)</span></h3>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr>${th("Service", true)}${th("Total")}${th("Open")}${secLevels.map(l=>th(l)).join("")}${th("SLA breach")}</tr></thead>
+        <tbody>${p.services.map(serviceRowSecurity).join("")}</tbody>
+      </table>
+      <p style="font-size:11px;color:#94a3b8;margin-top:10px">Click a row to drill into that service. Red cells indicate open Critical vulns or SLA breaches.</p>
+    </div>`;
+
+  const custTable = `
+    <div class="section" style="border-left:4px solid #d97706;background:#fefdfb">
+      <h3 style="color:#a16207;margin-bottom:12px">📞 Customer Reported Issues — Services at a glance <span style="font-weight:500;color:#64748b">(from ${(p.project_view?.customer_issues?.project_keys||['CBE']).join(',')} · in window)</span></h3>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr>${th("Service", true)}${th("Total")}${th("Open")}${custLevels.map(l=>th(l)).join("")}${th("SLA breach")}</tr></thead>
+        <tbody>${p.services.map(serviceRowCustomer).join("")}</tbody>
+      </table>
+    </div>`;
+
+  return secTable + custTable;
+}
+
+// Split-out helpers used by the executive layout
+function projectProductBlock(p){
+  // OVERALL project health (not per-service). Consolidates:
+  //   - Source-project Jira metrics (feature %, bug ratio, cycle, reopen, throughput)
+  //   - CBE Security totals (vulnerabilities count + severity breakdown)
+  //   - CBE Customer issue totals (count + priority breakdown)
+  const pv = p.project_view || {};
+  const src = pv.source_status || {};
+  const jSt   = src.jira;
+  const sSt   = src.security;
+  const cSt   = src.customer_issues;
+  const sec   = pv.security || {};
+  const cust  = pv.customer_issues || {};
+
+  // -- Row 1: Jira source-project stats --
+  const tt = (pv.tickets && pv.tickets.type) || {};
+  const tot = (tt.Bug||0)+(tt.Feature||0)+(tt.Task||0);
+  const bugPct = tot ? Math.round((tt.Bug||0)/tot*100) : null;
+  const jiraCards = (jSt === "ok") ? `
+    <div class="card"><div class="v">${num((pv.tickets||{}).total)}</div><div class="k">Total tickets<div style="font-size:10px;color:#94a3b8;font-weight:600;margin-top:1px">Jira ${p.key}</div></div></div>
+    <div class="card"><div class="v">${num((pv.tickets||{}).open)}</div><div class="k">Open</div></div>
+    <div class="card"><div class="v ${bugPct>50?'bad':bugPct>35?'warn':'good'}">${bugPct==null?'—':bugPct+'%'}</div><div class="k">Bug ratio</div></div>
+    <div class="card"><div class="v">${num((pv.roadmap||{}).feature_pct,'%')}</div><div class="k">Feature work</div></div>
+    <div class="card"><div class="v">${num((pv.cycle||{}).median_days,'d')}</div><div class="k">Median close</div></div>
+    <div class="card"><div class="v ${(pv.reopen||{}).rate_pct>3?'bad':'good'}">${num((pv.reopen||{}).rate_pct,'%')}</div><div class="k">Reopen rate</div></div>
+    <div class="card"><div class="v">${num(pv.throughput_per_week)}</div><div class="k">Closed / week</div></div>
+  ` : `<div class="card" style="grid-column:span 4"><div class="v" style="font-size:16px;color:#94a3b8">${jSt==="not_configured"?"Jira not configured":`Jira unavailable — ${jSt||"unknown"}`}</div></div>`;
+
+  // -- Row 2: Security + Customer counts from CBE (project-wide) --
+  const secTotal  = (sSt === "ok") ? (sec.total_vulnerabilities ?? 0) : null;
+  const secOpen   = (sSt === "ok") ? (sec.open_vulnerabilities  ?? 0) : null;
+  const custTotal = (cSt === "ok") ? (cust.total ?? 0) : null;
+  const custOpen  = (cSt === "ok") ? (cust.open  ?? 0) : null;
+  // Two simple cards — just how many. No severity, no SLA, no total-vs-open.
+  const cbeCards = `
+    <div class="card"><div class="v">${secOpen==null?'—':num(secOpen)}</div><div class="k">🛡️ Security issues<div style="font-size:10px;color:#94a3b8;font-weight:600;margin-top:1px">open in CBE</div></div></div>
+    <div class="card"><div class="v">${custOpen==null?'—':num(custOpen)}</div><div class="k">📞 Customer issues<div style="font-size:10px;color:#94a3b8;font-weight:600;margin-top:1px">open in CBE</div></div></div>
+  `;
+
+  return `<div class="cards">${jiraCards}${cbeCards}</div>
+    <p style="font-size:11px;color:#94a3b8;margin-top:12px">
+      Project-wide totals. Jira signals from <code>${p.key}</code>; Security & Customer from <code>CBE</code> filtered by <code>Product Assets</code>. Time window: ${windowLabelFor(p)}.
+    </p>`;
+}
+
+function unassignedBanner(unassigned, sourceLabel){
+  if(!unassigned || !unassigned.total) return "";
+  const pct = unassigned.pct_of_total;
+  const severity = pct >= 30 ? "high" : (pct >= 10 ? "medium" : "low");
+  const bg = severity==="high"?"#fef2f2":severity==="medium"?"#fffbeb":"#f8fafc";
+  const border = severity==="high"?"#dc2626":severity==="medium"?"#d97706":"#94a3b8";
+  const color = severity==="high"?"#991b1b":severity==="medium"?"#a16207":"#475569";
+  return `<div style="background:${bg};border-left:4px solid ${border};padding:12px 16px;border-radius:8px;margin-bottom:12px;color:${color};font-size:13px">
+    <b>⚠️ Data attribution gap:</b> ${unassigned.total} ${sourceLabel} (${pct}% of total) are tagged at product level only — <b>not attributed to any specific service</b>. These appear in the "Unassigned" row below. This is a CBE data-hygiene issue, not a tool limitation.
+  </div>`;
+}
+
+function unmatchedScopesBanner(p){
+  // CBE Service internal values that don't map to any Jira Component in the source project.
+  // These aren't services — they're either wrong tags or missing components. Surface as data hygiene.
+  const unmatched = (p.project_config && p.project_config.unmatched_cbe_scopes) || p.unmatched_cbe_scopes || [];
+  if (!unmatched.length) return "";
+  const rows = unmatched.slice(0, 5).map(u => `<code style="background:#e0e7ff;padding:2px 6px;border-radius:4px;font-size:11.5px">${u.security_scope || u.name}</code>`).join(" ");
+  const more = unmatched.length > 5 ? ` <span style="color:#64748b">+${unmatched.length - 5} more</span>` : "";
+  return `<div style="background:#eff6ff;border-left:4px solid #2563eb;padding:12px 16px;border-radius:8px;margin-bottom:12px;color:#1e3a8a;font-size:13px">
+    <b>ℹ️ CBE tags with no matching Jira Component:</b> ${unmatched.length} <code>Service internal</code> value${unmatched.length===1?'':'s'} appear${unmatched.length===1?'s':''} in CBE but don't correspond to any Component in the source project. Either the tag is wrong or the Component is missing. Any tickets under these tags will appear in the Unassigned row.
+    <div style="margin-top:6px">${rows}${more}</div>
+  </div>`;
+}
+
+function unassignedTicketsPanel(unassigned){
+  const t = (unassigned && unassigned.tickets) || [];
+  if(!t.length) return "";
+  return `
+  <details style="margin-top:12px;background:#fbfaff;border-radius:10px;border:1px solid #e9d5ff;overflow:hidden">
+    <summary style="padding:12px 16px;cursor:pointer;font-weight:700;color:#6d28d9;font-size:13px;list-style:none">
+      🔍 View unassigned vulnerabilities (${t.length} open) — with suggested service ownership
+    </summary>
+    <div style="padding:0 16px 16px">
+      <p style="font-size:12px;color:#64748b;margin:8px 0 12px">
+        These vulnerabilities are only tagged at the product level. The <b>Suggested service</b> column is inferred from the ticket title text — it's a hint for Global team to backfill the correct <code>Service internal</code> value, not authoritative.
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <thead>
+          <tr style="background:#f3f4f6">
+            <th style="text-align:left;padding:8px 10px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:700">Key</th>
+            <th style="text-align:center;padding:8px 6px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:700">Priority</th>
+            <th style="text-align:center;padding:8px 6px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:700">Risk</th>
+            <th style="text-align:center;padding:8px 6px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:700">Status</th>
+            <th style="text-align:left;padding:8px 10px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:700">Summary</th>
+            <th style="text-align:left;padding:8px 10px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:700">Suggested service</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${t.map(x => {
+            const pri = (x.priority || "").toLowerCase();
+            const priCls = pri==="high" || pri==="highest" ? "bad" : (pri==="medium" ? "warn" : "");
+            const risk = (x.risk_rating || "").toLowerCase();
+            const riskCls = risk==="critical" ? "bad" : risk==="high" ? "bad" : risk==="moderate" ? "warn" : "";
+            const suggestion = x.suggested_service
+              ? `<span style="background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">${x.suggested_service}</span>`
+              : `<span style="color:#94a3b8;font-style:italic;font-size:11px">no confident match</span>`;
+            return `<tr style="border-top:1px solid #ede9fe">
+              <td style="padding:8px 10px;font-family:ui-monospace,monospace;font-weight:700">
+                <a href="${x.url}" target="_blank" rel="noopener" style="color:#2e5496;text-decoration:none">${x.key} ↗</a>
+              </td>
+              <td style="text-align:center;padding:8px 6px;font-weight:700" class="${priCls}">${x.priority || '—'}</td>
+              <td style="text-align:center;padding:8px 6px;font-weight:700" class="${riskCls}">${x.risk_rating || '—'}</td>
+              <td style="text-align:center;padding:8px 6px;color:#64748b">${x.status || '—'}</td>
+              <td style="padding:8px 10px;color:#334155">${x.summary}</td>
+              <td style="padding:8px 10px">${suggestion}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  </details>`;
+}
+
+function unassignedRowSecurity(u, colCount){
+  if(!u || !u.total) return "";
+  return `<tr style="background:#faf5ff;border-top:2px solid #a78bfa">
+    <td style="padding:12px 12px;font-weight:700;color:#7c3aed">
+      <span style="background:#7c3aed;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;margin-right:6px">UNASSIGNED</span>
+      Product-level only (no service tag)
+    </td>
+    <td style="text-align:center;font-weight:700">${u.total}</td>
+    <td style="text-align:center;font-weight:700;color:${u.open>0?'#a16207':'#334155'}">${u.open}</td>
+    <td colspan="${colCount-3}" style="text-align:center;color:#94a3b8;font-size:12px;font-style:italic">Severity breakdown not available for unassigned items</td>
+  </tr>`;
+}
+
+function cbeTotalsBlock(p){
+  // Simplified project-level view: two side-by-side cards with severity/priority
+  // breakdown for Security (Vulnerabilities) and Customer Issues from CBE.
+  // No per-service breakdown — CBE data is a project-level signal now.
+  const pv  = p.project_view || {};
+  const sec = pv.security || {};
+  const cust= pv.customer_issues || {};
+  const secStatus  = (pv.source_status || {}).security;
+  const custStatus = (pv.source_status || {}).customer_issues;
+
+  const secLevels  = ["Critical","High","Moderate","Low"];
+  const custLevels = cust.severity_levels || ["Highest","High","Medium","Low"];
+
+  const box = (title, statusLabel, total, open, jiraUrl, levels, byOpen, sla) => {
+    const status = statusLabel === "ok"
+      ? `<span class="badge ok">LIVE</span>`
+      : statusLabel === "not_configured" || !statusLabel
+        ? `<span class="badge nc">NOT CONFIGURED</span>`
+        : `<span class="badge err">ERROR</span>`;
+    const rows = levels.map(l => {
+      const n = (byOpen || {})[l] || 0;
+      const c = n === 0 ? "#94a3b8" : (l === "Critical" || l === "Highest") ? "#dc2626" : (l === "High") ? "#d97706" : "#334155";
+      return `<tr>
+        <td style="padding:6px 10px;color:#475569;font-size:13px">${l}</td>
+        <td style="padding:6px 10px;text-align:right;font-weight:800;font-size:14px;color:${c}">${n}</td>
+      </tr>`;
+    }).join("");
+    const slaLine = sla && (sla.critical_breached || sla.high_breached)
+      ? `<div style="margin-top:8px;padding:8px 10px;background:#fef2f2;border-left:3px solid #dc2626;border-radius:6px;font-size:12px;color:#991b1b">
+           <b>${(sla.critical_breached||0) + (sla.high_breached||0)}</b> past SLA
+           ${sla.critical_breached ? ` · ${sla.critical_breached} Critical > ${sla.critical_days}d` : ""}
+           ${sla.high_breached ? ` · ${sla.high_breached} High > ${sla.high_days}d` : ""}
+         </div>`
+      : "";
+    return `<div style="flex:1;min-width:280px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-weight:800;font-size:14px;color:#1f3864">${title}</div>
+        ${status}
+      </div>
+      <div style="display:flex;gap:24px;margin-bottom:12px">
+        <div><div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Total</div><div style="font-size:26px;font-weight:800;color:#1f3864">${total ?? 0}</div></div>
+        <div><div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Open</div><div style="font-size:26px;font-weight:800;color:${(open||0)>0?'#a16207':'#16a34a'}">${open ?? 0}</div></div>
+      </div>
+      <div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px">Open by ${title.includes('Security')?'severity':'priority'}</div>
+      <table style="width:100%;border-collapse:collapse">${rows}</table>
+      ${slaLine}
+      ${jiraUrl ? `<div style="margin-top:12px;text-align:right">
+        <a href="${jiraUrl}" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:#2e5496;text-decoration:none">View all in Jira ↗</a>
+      </div>` : ""}
+    </div>`;
+  };
+
+  const secCard = box("🛡️ Security (Vulnerabilities)", secStatus,
+                       sec.total_vulnerabilities, sec.open_vulnerabilities,
+                       sec.jira_ui_search_url,
+                       secLevels, sec.open_by_severity, sec.sla);
+  const custCard= box("📞 Customer Issues", custStatus,
+                       cust.total, cust.open,
+                       cust.jira_ui_search_url,
+                       custLevels, cust.open_by_severity, null);
+
+  return `<div style="display:flex;gap:14px;flex-wrap:wrap">${secCard}${custCard}</div>
+    <p style="font-size:11px;color:#94a3b8;margin-top:12px">
+      Project-level totals from CBE, filtered by <code>Product Assets = ${(p.project_view||{}).product_scope_value || p.project_config?.product_scope_value || "(scope)"}</code> and the current time window. No per-service breakdown — CBE data is treated as a single project signal.
+    </p>`;
+}
+
+// Slim per-service summary — one row per service, four number columns:
+//   Total tickets · Security tickets · Customer bugs · Feature work %
+// No severity breakdown per row; keep it scannable for leadership.
+function serviceQuickTable(p){
+  const thStyle = 'text-align:center;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:10px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0';
+  const nameThStyle = thStyle + ';text-align:left;padding-left:14px';
+  const th = (l,wide=false)=>`<th style="${wide?nameThStyle:thStyle}">${l}</th>`;
+  const cell = (n, color) => {
+    const c = color || (n > 0 ? "#1e293b" : "#94a3b8");
+    return `<td style="text-align:center;padding:9px 8px;font-weight:700;color:${c};font-size:13.5px">${n==null?'—':n}</td>`;
+  };
+  const rows = p.services.map((s, i) => {
+    const src = s.source_status || {};
+    // Total tickets: Jira main-project tickets for this service (component)
+    const totalTix = (src.jira === "ok") ? ((s.tickets && s.tickets.total) ?? 0) : null;
+    // Security tickets: CBE Vulnerabilities where Service internal = security_scope
+    const secTix = (src.security === "ok") ? ((s.security && s.security.total_vulnerabilities) ?? 0) : null;
+    const secOpen = (src.security === "ok") ? ((s.security && s.security.open_vulnerabilities) ?? 0) : null;
+    // Customer bugs: CBE non-Vuln tickets where Service internal = security_scope
+    const custTix = (src.customer_issues === "ok") ? ((s.customer_issues && s.customer_issues.total) ?? 0) : null;
+    // Feature work %: from Jira main-project roadmap
+    const featPct = (src.jira === "ok") ? ((s.roadmap && s.roadmap.feature_pct) ?? null) : null;
+
+    const tierColor = (TIERS[s.tier] || TIERS.GREEN).color;
+    const secColor  = secOpen > 0 ? "#dc2626" : (secTix > 0 ? "#d97706" : null);
+    const custColor = custTix > 0 ? "#d97706" : null;
+    const featColor = featPct == null ? null : (featPct < 80 ? "#d97706" : "#16a34a");
+
+    return `<tr onclick="STATE.curService=${i};render();window.scrollTo({top:document.querySelector('.tabs')?.offsetTop||0,behavior:'smooth'})"
+                 style="cursor:pointer;border-bottom:1px solid #f1f5f9"
+                 onmouseover="this.style.background='#fbfcfe'" onmouseout="this.style.background=''">
+      <td style="padding:9px 14px;font-weight:700;font-size:13.5px">
+        <span class="pill" style="background:${tierColor};font-size:10px;padding:3px 8px;margin-right:8px">${s.tier}</span>
+        ${s.name}
+      </td>
+      ${cell(totalTix)}
+      ${cell(secTix==null?null:`${secTix}${secOpen>0?` (${secOpen} open)`:''}`, secColor)}
+      ${cell(custTix, custColor)}
+      ${cell(featPct==null?null:`${featPct}%`, featColor)}
+    </tr>`;
+  }).join("");
+
+  return `<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden">
+    <thead><tr>
+      ${th("Service", true)}
+      ${th("Total tickets")}
+      ${th("Security")}
+      ${th("Customer bugs")}
+      ${th("Feature %")}
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <p style="font-size:11px;color:#94a3b8;margin-top:10px">
+    <b>Total tickets</b>: Jira ${p.key} component tickets in window. <b>Security</b>: CBE Vulnerabilities tagged with the service's <code>Service internal</code>. <b>Customer bugs</b>: CBE non-Vuln tickets. <b>Feature %</b>: share of feature-type tickets (target ≥80%). Click a row for the per-service deep-dive tab.
+  </p>`;
+}
+
+// NOTE: securityMatrixOnly() and customerMatrixOnly() were removed —
+// the per-service CBE breakdown with severity columns was too heavy.
+// serviceQuickTable() (above) is the leaner replacement — 4 numeric columns per service.
+
+function projectOverview(p){
+  const pv = p.project_view || {};
+  const src = pv.source_status || {};
+  const st = src.jira;
+  let jiraBlock = "";
+  if(st === "not_configured") jiraBlock = `<div class="section"><h3>Project overview (whole Jira project)</h3><div class="notconfig">Jira not configured.</div></div>`;
+  else if(st !== "ok")        jiraBlock = `<div class="section"><h3>Project overview (whole Jira project)</h3><div class="unavailable">Jira unavailable — ${st}</div></div>`;
+  else {
+    const tt = (pv.tickets && pv.tickets.type) || {}, tot=(tt.Bug||0)+(tt.Feature||0)+(tt.Task||0);
+    const bugPct = tot? Math.round((tt.Bug||0)/tot*100) : null;
+    jiraBlock = `<div class="section"><h3>${p.name} — Product tickets (from Jira project ${(p.project_view?.tickets)?p.key:p.key}) ${srcBadge(st)}</h3>
+      <div class="cards">
+        <div class="card"><div class="v">${num(pv.tickets.total)}</div><div class="k">Total tickets</div></div>
+        <div class="card"><div class="v">${num(pv.tickets.open)}</div><div class="k">Open</div></div>
+        <div class="card"><div class="v ${bugPct>50?'bad':bugPct>35?'warn':'good'}">${bugPct==null?'—':bugPct+'%'}</div><div class="k">Bug ratio</div></div>
+        <div class="card"><div class="v ${(pv.tickets.sev.Critical||0)>0?'bad':'good'}">${pv.tickets.sev.Critical||0}</div><div class="k">Critical open</div></div>
+        <div class="card"><div class="v">${num(pv.cycle.median_days,'d')}</div><div class="k">Median close</div></div>
+        <div class="card"><div class="v ${pv.reopen.rate_pct>3?'bad':'good'}">${num(pv.reopen.rate_pct,'%')}</div><div class="k">Reopen rate</div></div>
+        <div class="card"><div class="v">${num(pv.throughput_per_week)}</div><div class="k">Closed / week</div></div>
+        <div class="card"><div class="v">${num(pv.roadmap.feature_pct,'%')}</div><div class="k">Feature work</div></div>
+      </div></div>`;
+  }
+  return jiraBlock + projectMatrixSection(p) + securitySection(pv, src, "— project-wide roll-up") + customerSection(pv, src, "— project-wide roll-up");
+}
+function tabs(p){
+  return `<div class="tabs">${p.services.map((s,i)=>`
+    <div class="tab ${i===STATE.curService?'active':''}" onclick="STATE.curService=${i};render()">
+      <span class="pill" style="background:${TIERS[s.tier].color}">${s.tier}</span>
+      ${s.name}
+    </div>`).join("")}</div>`;
+}
+function serviceDetail(s){
+  const src=s.source_status;
+  const tt=s.tickets.type||{}, tot=(tt.Bug||0)+(tt.Feature||0)+(tt.Task||0);
+  const bugPct = tot? Math.round((tt.Bug||0)/tot*100) : null;
+  function jiraSection(){
+    if(src.jira==="not_configured") return `<div class="notconfig">Jira not configured.</div>`;
+    if(src.jira!=="ok") return `<div class="unavailable">Jira unavailable — ${src.jira}</div>`;
+    const secOk = src.security==="ok" && s.security;
+    const custOk = src.customer_issues==="ok" && s.customer_issues;
+    const secOpen = secOk ? num(s.security.open_vulnerabilities) : "—";
+    const secCrit = secOk ? (s.security.open_by_severity?.Critical||0) : 0;
+    const custOpen = custOk ? num(s.customer_issues.open) : "—";
+    // Don't mask problems as blank cards — show the real status text when a source
+    // isn't "ok" (not_configured vs an actual fetch error), same policy as GH/Datadog below.
+    const secNote = (!secOk && src.security!=="not_configured") ? `<div class="unavailable" style="margin-top:8px">Security unavailable — ${src.security}</div>` : (src.security==="not_configured" ? `<div class="notconfig" style="margin-top:8px">Security not configured for this service.</div>` : "");
+    const custNote = (!custOk && src.customer_issues!=="not_configured") ? `<div class="unavailable" style="margin-top:8px">Customer issues unavailable — ${src.customer_issues}</div>` : (src.customer_issues==="not_configured" ? `<div class="notconfig" style="margin-top:8px">Customer issues not configured for this service.</div>` : "");
+    return `<div class="cards">
+      <div class="card"><div class="v">${num(s.tickets.total)}</div><div class="k">Total tickets</div></div>
+      <div class="card"><div class="v">${num(s.tickets.open)}</div><div class="k">Open</div></div>
+      <div class="card"><div class="v ${bugPct>50?'bad':bugPct>35?'warn':'good'}">${bugPct==null?'—':bugPct+'%'}</div><div class="k">Bug ratio</div></div>
+      <div class="card"><div class="v ${(s.tickets.sev.Critical||0)>0?'bad':'good'}">${s.tickets.sev.Critical||0}</div><div class="k">Critical open</div></div>
+      <div class="card"><div class="v">${num(s.cycle.median_days,'d')}</div><div class="k">Median close</div></div>
+      <div class="card"><div class="v ${s.reopen.rate_pct>3?'bad':'good'}">${num(s.reopen.rate_pct,'%')}</div><div class="k">Reopen rate</div></div>
+      <div class="card"><div class="v">${num(s.throughput_per_week)}</div><div class="k">Closed / week</div></div>
+      <div class="card"><div class="v">${num(s.roadmap.feature_pct,'%')}</div><div class="k">Feature work</div></div>
+      <div class="card"><div class="v ${secCrit>0?'bad':'good'}">${secOpen}</div><div class="k">Security issues open</div></div>
+      <div class="card"><div class="v">${custOpen}</div><div class="k">Customer issues open</div></div></div>${secNote}${custNote}`;
+  }
+  function ghSection(){
+    if(src.github==="not_configured") return `<div class="notconfig">GitHub not configured.</div>`;
+    if(src.github!=="ok") return `<div class="unavailable">GitHub unavailable — ${src.github}</div>`;
+    const g=s.github;
+    return `<div>${kv("Open PRs",g.open_prs)}${kv("Median PR merge",g.median_merge_hours+"h",g.median_merge_hours>16?'bad':g.median_merge_hours>10?'warn':'good')}${kv("PRs reviewed",g.reviewed_pct+"%",g.reviewed_pct<85?'bad':'good')}${kv("Branch protection",g.branch_protection?'Enforced':'Missing',g.branch_protection?'good':'bad')}</div>`;
+  }
+  function ddSection(){
+    if(src.datadog==="not_configured") return `<div class="notconfig">Datadog not configured.</div>`;
+    if(src.datadog!=="ok") return `<div class="unavailable">Datadog unavailable — ${src.datadog}</div>`;
+    const d=s.datadog;
+    const link=(url,label)=> url? `<a href="${url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">${label} ↗</a>` : label;
+    const monVal = d.monitors_url ? link(d.monitors_url, d.monitors) : d.monitors;
+    const alertVal = (d.alerting>0 && d.alerting_url) ? link(d.alerting_url, d.alerting) : d.alerting;
+    return `<div>${kv("Active monitors",monVal)}${kv("Muted",d.muted,d.muted>3?'warn':'good')}${kv("Alerting now",alertVal,d.alerting>0?'warn':'good')}</div>`;
+  }
+  const t=TIERS[s.tier];
+  const gaps=[...s.gates.critical_gaps.map(g=>["crit",g]), ...s.gates.standard_gaps.map(g=>["std",g])];
+  const strat=s.gates.strategic_fail?`<li><span class="tag strat">Strategic</span> Fails growth alignment</li>`:"";
+  return `<div class="dhead" style="background:#fafbfe">
+    <span class="pill" style="background:${t.color}">${s.tier}</span>
+    <span class="title">${s.name}</span>
+    <span class="why">Jira scope: <code>${s.jira_scope||'(none)'}</code> &nbsp;·&nbsp; Jira ${srcBadge(src.jira)} GitHub ${srcBadge(src.github)} Datadog ${srcBadge(src.datadog)}</span></div>
+    <div class="section"><h3>Ticket health (Jira, scoped to this service)</h3>${jiraSection()}</div>
+    <div class="section"><h3>Code &amp; pipeline</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div><div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:6px">GITHUB</div>${ghSection()}</div>
+      <div><div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:6px">DATADOG</div>${ddSection()}</div></div></div>
+    <div class="section"><h3>Gate scoring → service decision</h3><div class="gatebox">
+      ${s.gates.insufficient_jira ? `<div class="unavailable" style="margin-bottom:12px">
+        <b>Insufficient Jira data</b> — filter <code>${s.jira_scope}</code> returned 0 tickets. Fix <code>jira_scope</code> in <code>projects.json</code> before this service's tier can be trusted.
+      </div>` : ""}
+      <div style="display:flex;gap:22px;font-size:13px;margin-bottom:6px">
+        <span><b class="${s.gates.critical_gaps.length?'bad':'good'}">${s.gates.critical_gaps.length}</b> critical gaps</span>
+        <span><b class="${s.gates.strategic_fail?'bad':'good'}">${s.gates.strategic_fail?'Fail':'Pass'}</b> strategic</span>
+        <span><b>${s.gates.standard_gaps.length}</b> standard gaps</span></div>
+      <ul class="gaplist">${strat}${gaps.map(g=>`<li><span class="tag ${g[0]}">${g[0]==='crit'?'Critical':'Standard'}</span> ${g[1]}</li>`).join("")||(!s.gates.strategic_fail?'<li class="good">✓ No gaps found in configured sources.</li>':'')}</ul>
+      <div class="verdict" style="background:${t.color}"><span class="vt">${t.label}</span><span class="vd">${t.desc}</span></div></div></div>`;
+}
+
+// ============================ ROUTER ============================
+function render(){ (STATE.view === "landing" ? renderLanding : renderProject)(); }
+async function boot(){
+  const p = parseHash();
+  STATE.view = p.view;
+  if(p.view === "project"){ STATE.project = p.project; STATE.window = p.window; await loadReport(); }
+  else { await loadPortfolio(); }
+}
+window.addEventListener("hashchange", boot);
+boot();
+</script>
+</body></html>

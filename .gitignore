@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets / local environment (NEVER commit real credentials)
+.env
+.env.*
+!.env.example
+
+# Local IDE / agent settings
+.claude/
+.idea/
+.vscode/
+
+# OS cruft
+.DS_Store
+Thumbs.db

@@ -1,0 +1,108 @@
+{
+  "info": {
+    "name": "Onboarding Readiness — Live Prototype",
+    "description": "Stateless FastAPI service that pulls live data from Jira / GitHub / Datadog and returns a per-project readiness tier. Set the `baseUrl` collection variable to your running host (default http://localhost:8000). See README.md for full field-level schema.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",    "value": "http://localhost:8000", "description": "Where the FastAPI service is running." },
+    { "key": "projectKey", "value": "PAY",                   "description": "Project key from projects.json — case-sensitive." }
+  ],
+  "item": [
+    {
+      "name": "Portfolio overview — /api/overview",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Accept", "value": "application/json" } ],
+        "url": {
+          "raw":  "{{baseUrl}}/api/overview",
+          "host": [ "{{baseUrl}}" ],
+          "path": [ "api", "overview" ]
+        },
+        "description": "Returns a JSON array — one full report per project registered in projects.json. Each element has the same shape as GET /api/report/{key}."
+      },
+      "response": [
+        {
+          "name": "200 — two-project portfolio (example)",
+          "originalRequest": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/overview", "host": ["{{baseUrl}}"], "path": ["api","overview"] }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [ { "key": "Content-Type", "value": "application/json" } ],
+          "body": "[\n  {\n    \"key\": \"PAY\",\n    \"name\": \"Payments API\",\n    \"generated_at\": \"2026-07-02T10:14:03.221Z\",\n    \"tier\": \"AMBER\",\n    \"tickets\": { \"total\": 842, \"open\": 96, \"closed\": 746,\n      \"sev\":  { \"Critical\": 0, \"High\": 8, \"Medium\": 41, \"Low\": 47 },\n      \"type\": { \"Bug\": 210, \"Feature\": 560, \"Task\": 72 },\n      \"bug_ratio_pct\": 25 },\n    \"cycle\":  { \"median_days\": 3.2, \"p90_days\": 14.5 },\n    \"reopen\": { \"count\": 28, \"rate_pct\": 3.8 },\n    \"throughput_per_week\": 21,\n    \"roadmap\": { \"funded\": true, \"feature_pct\": 83 },\n    \"github\":  { \"open_prs\": 9, \"median_merge_hours\": 6.5, \"reviewed_pct\": 98, \"branch_protection\": true },\n    \"datadog\": { \"monitors\": 44, \"muted\": 3, \"alerting\": 1, \"incidents\": 0, \"mttr_hours\": 2.1 },\n    \"gates\":   { \"critical_gaps\": [], \"strategic_fail\": false, \"standard_gaps\": [\"Median PR merge time 6.5h high\",\"3 muted monitors — observability not clean\"] },\n    \"source_status\": { \"jira\": \"ok\", \"github\": \"ok\", \"datadog\": \"ok\" }\n  },\n  {\n    \"key\": \"CHK\",\n    \"name\": \"Checkout Web\",\n    \"generated_at\": \"2026-07-02T10:14:03.221Z\",\n    \"tier\": \"RED\",\n    \"tickets\": { \"total\": 610, \"open\": 88, \"closed\": 522,\n      \"sev\":  { \"Critical\": 1, \"High\": 12, \"Medium\": 39, \"Low\": 37 },\n      \"type\": { \"Bug\": 196, \"Feature\": 360, \"Task\": 54 },\n      \"bug_ratio_pct\": 32 },\n    \"cycle\":  { \"median_days\": 4.1, \"p90_days\": 19 },\n    \"reopen\": { \"count\": 41, \"rate_pct\": 6.4 },\n    \"throughput_per_week\": 17,\n    \"roadmap\": { \"funded\": true, \"feature_pct\": 81 },\n    \"github\":  { \"open_prs\": 11, \"median_merge_hours\": 14, \"reviewed_pct\": 88, \"branch_protection\": false },\n    \"datadog\": { \"monitors\": 38, \"muted\": 5, \"alerting\": 1, \"incidents\": 0, \"mttr_hours\": 3.2 },\n    \"gates\":   { \"critical_gaps\": [\"No branch protection on main; direct pushes allowed (2E.1)\"], \"strategic_fail\": false, \"standard_gaps\": [\"Reopen rate 6.4% above target\",\"5 muted monitors — observability not clean\"] },\n    \"source_status\": { \"jira\": \"ok\", \"github\": \"ok\", \"datadog\": \"ok\" }\n  }\n]"
+        }
+      ]
+    },
+
+    {
+      "name": "Single project report — /api/report/{key}",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Accept", "value": "application/json" } ],
+        "url": {
+          "raw":  "{{baseUrl}}/api/report/{{projectKey}}",
+          "host": [ "{{baseUrl}}" ],
+          "path": [ "api", "report", "{{projectKey}}" ]
+        },
+        "description": "Returns the full readiness report for one project. Change the `projectKey` collection variable to point at any key registered in projects.json (case-sensitive)."
+      },
+      "response": [
+        {
+          "name": "200 — all sources live",
+          "originalRequest": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/report/PAY", "host": ["{{baseUrl}}"], "path": ["api","report","PAY"] }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [ { "key": "Content-Type", "value": "application/json" } ],
+          "body": "{\n  \"key\": \"PAY\",\n  \"name\": \"Payments API\",\n  \"generated_at\": \"2026-07-02T10:14:03.221Z\",\n  \"tier\": \"AMBER\",\n  \"tickets\": { \"total\": 842, \"open\": 96, \"closed\": 746,\n    \"sev\":  { \"Critical\": 0, \"High\": 8, \"Medium\": 41, \"Low\": 47 },\n    \"type\": { \"Bug\": 210, \"Feature\": 560, \"Task\": 72 },\n    \"bug_ratio_pct\": 25 },\n  \"cycle\":  { \"median_days\": 3.2, \"p90_days\": 14.5 },\n  \"reopen\": { \"count\": 28, \"rate_pct\": 3.8 },\n  \"throughput_per_week\": 21,\n  \"roadmap\": { \"funded\": true, \"feature_pct\": 83 },\n  \"github\":  { \"open_prs\": 9, \"median_merge_hours\": 6.5, \"reviewed_pct\": 98, \"branch_protection\": true },\n  \"datadog\": { \"monitors\": 44, \"muted\": 3, \"alerting\": 1, \"incidents\": 0, \"mttr_hours\": 2.1 },\n  \"gates\":   { \"critical_gaps\": [], \"strategic_fail\": false, \"standard_gaps\": [\"Median PR merge time 6.5h high\",\"3 muted monitors — observability not clean\"] },\n  \"source_status\": { \"jira\": \"ok\", \"github\": \"ok\", \"datadog\": \"ok\" }\n}"
+        },
+        {
+          "name": "200 — only Jira configured (partial)",
+          "originalRequest": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/report/PAY", "host": ["{{baseUrl}}"], "path": ["api","report","PAY"] }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [ { "key": "Content-Type", "value": "application/json" } ],
+          "body": "{\n  \"key\": \"PAY\", \"name\": \"Payments API\", \"tier\": \"GREEN\",\n  \"tickets\": { \"total\": 842, \"open\": 96, \"closed\": 746, \"sev\": {\"Critical\":0,\"High\":8,\"Medium\":41,\"Low\":47}, \"type\": {\"Bug\":210,\"Feature\":560,\"Task\":72}, \"bug_ratio_pct\": 25 },\n  \"cycle\": { \"median_days\": 3.2, \"p90_days\": 14.5 },\n  \"reopen\": { \"count\": 28, \"rate_pct\": 3.8 },\n  \"throughput_per_week\": 21,\n  \"roadmap\": { \"funded\": true, \"feature_pct\": 83 },\n  \"github\":  { \"open_prs\": null, \"median_merge_hours\": null, \"reviewed_pct\": null, \"branch_protection\": null },\n  \"datadog\": { \"monitors\": null, \"muted\": null, \"alerting\": null, \"incidents\": null, \"mttr_hours\": null },\n  \"gates\":   { \"critical_gaps\": [], \"strategic_fail\": false, \"standard_gaps\": [] },\n  \"source_status\": { \"jira\": \"ok\", \"github\": \"not_configured\", \"datadog\": \"not_configured\" }\n}"
+        },
+        {
+          "name": "404 — unknown project key",
+          "originalRequest": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/report/XYZ", "host": ["{{baseUrl}}"], "path": ["api","report","XYZ"] }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "header": [ { "key": "Content-Type", "value": "application/json" } ],
+          "body": "{ \"detail\": \"Unknown project 'XYZ'\" }"
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "const b = pm.response.json();",
+              "pm.test('has tier + core sections', () => {",
+              "  pm.expect(b).to.have.property('tier');",
+              "  pm.expect(b).to.have.property('tickets');",
+              "  pm.expect(b).to.have.property('gates');",
+              "  pm.expect(b).to.have.property('source_status');",
+              "});",
+              "pm.test('tier is one of the five values', () =>",
+              "  pm.expect(['GREEN','AMBER','MAINT','RED','DEFERRED']).to.include(b.tier));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

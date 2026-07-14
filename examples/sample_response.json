@@ -1,0 +1,53 @@
+{
+  "_note": "Realistic example payload from GET /api/report/PAY when all three sources are live. Field types and null semantics match the README schema.",
+
+  "key": "PAY",
+  "name": "Payments API",
+  "generated_at": "2026-07-02T10:14:03.221Z",
+  "tier": "AMBER",
+
+  "tickets": {
+    "total": 842,
+    "open": 96,
+    "closed": 746,
+    "sev":  { "Critical": 0, "High": 8, "Medium": 41, "Low": 47 },
+    "type": { "Bug": 210, "Feature": 560, "Task": 72 },
+    "bug_ratio_pct": 25
+  },
+
+  "cycle":  { "median_days": 3.2, "p90_days": 14.5 },
+  "reopen": { "count": 28, "rate_pct": 3.8 },
+  "throughput_per_week": 21,
+
+  "roadmap": { "funded": true, "feature_pct": 83 },
+
+  "github": {
+    "open_prs": 9,
+    "median_merge_hours": 6.5,
+    "reviewed_pct": 98,
+    "branch_protection": true
+  },
+
+  "datadog": {
+    "monitors": 44,
+    "muted": 3,
+    "alerting": 1,
+    "incidents": 0,
+    "mttr_hours": 2.1
+  },
+
+  "gates": {
+    "critical_gaps":  [],
+    "strategic_fail": false,
+    "standard_gaps": [
+      "Median PR merge time 6.5h high",
+      "3 muted monitors — observability not clean"
+    ]
+  },
+
+  "source_status": {
+    "jira":    "ok",
+    "github":  "ok",
+    "datadog": "ok"
+  }
+}

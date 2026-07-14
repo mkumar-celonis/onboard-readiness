@@ -1,0 +1,35 @@
+{
+  "_note": "Example payload when only Jira credentials are set — GitHub and Datadog sections are null and their source_status is 'not_configured'. Gates for those sources are simply not scored (no false 'gap').",
+
+  "key": "PAY",
+  "name": "Payments API",
+  "generated_at": "2026-07-02T10:14:03.221Z",
+  "tier": "GREEN",
+
+  "tickets": {
+    "total": 842, "open": 96, "closed": 746,
+    "sev":  { "Critical": 0, "High": 8, "Medium": 41, "Low": 47 },
+    "type": { "Bug": 210, "Feature": 560, "Task": 72 },
+    "bug_ratio_pct": 25
+  },
+  "cycle":  { "median_days": 3.2, "p90_days": 14.5 },
+  "reopen": { "count": 28, "rate_pct": 3.8 },
+  "throughput_per_week": 21,
+  "roadmap": { "funded": true, "feature_pct": 83 },
+
+  "github": {
+    "open_prs": null, "median_merge_hours": null,
+    "reviewed_pct": null, "branch_protection": null
+  },
+  "datadog": {
+    "monitors": null, "muted": null, "alerting": null,
+    "incidents": null, "mttr_hours": null
+  },
+
+  "gates": { "critical_gaps": [], "strategic_fail": false, "standard_gaps": [] },
+  "source_status": {
+    "jira":    "ok",
+    "github":  "not_configured",
+    "datadog": "not_configured"
+  }
+}
