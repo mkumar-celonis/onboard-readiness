@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Onboarding Readiness</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 0; margin-bottom: 30px; border-radius: 8px; }
+        header h1 { font-size: 32px; margin-bottom: 10px; }
+        header p { opacity: 0.9; }
+        .project-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .project-card h2 { margin-bottom: 15px; color: #333; }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .metric {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .metric-label { font-size: 12px; color: #666; margin-bottom: 5px; }
+        .metric-value { font-size: 20px; font-weight: bold; color: #333; }
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .badge.green { background: #d4edda; color: #155724; }
+        .badge.amber { background: #fff3cd; color: #856404; }
+        .badge.red { background: #f8d7da; color: #721c24; }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+        .footer a { color: #667eea; text-decoration: none; margin: 0 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Project Onboarding Readiness</h1>
+            <p>Real-time dashboard for service readiness assessment</p>
+        </header>
+        <div id="projects"></div>
+        <div class="footer">
+            <p>Powered by Jira + GitHub metrics | 
+            <a href="https://github.com/mkumar-celonis/onboard-readiness">GitHub</a></p>
+        </div>
+    </div>
+
+    <script>
+        const data = {"overview": [{"key": "task-mining-ai", "name": "Task Mining AI Service", "jira_scope": "TM AI Service", "readiness_tier": "green", "metrics": {"jira": {"open_items": 15, "in_progress": 8, "blocked": 2, "completed_this_month": 45, "avg_cycle_time_days": 4.2}, "github": {"repos_monitored": 2, "open_prs": 6, "median_merge_hours": 5.2, "reviewed_pct": 92, "branch_protection_all": true, "avg_commits_per_week": 8.3, "deployment_frequency": "medium"}}, "gaps": []}]};
+        
+        const projectsDiv = document.getElementById('projects');
+        data.overview.forEach(project => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            
+            const tier = project.readiness_tier || 'unknown';
+            const tierBadgeClass = tier === 'green' ? 'green' : tier === 'amber' ? 'amber' : 'red';
+            
+            card.innerHTML = `
+                <h2>${project.name}</h2>
+                <p><code>${project.key}</code></p>
+                <span class="badge ${tierBadgeClass}">${tier.toUpperCase()}</span>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <div class="metric-label">Jira Items</div>
+                        <div class="metric-value">${project.metrics.jira.open_items}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">In Progress</div>
+                        <div class="metric-value">${project.metrics.jira.in_progress}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Cycle Time</div>
+                        <div class="metric-value">${project.metrics.jira.avg_cycle_time_days.toFixed(1)}d</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Open PRs</div>
+                        <div class="metric-value">${project.metrics.github.open_prs}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Merge Time</div>
+                        <div class="metric-value">${project.metrics.github.median_merge_hours.toFixed(1)}h</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Review Coverage</div>
+                        <div class="metric-value">${project.metrics.github.reviewed_pct}%</div>
+                    </div>
+                </div>
+            `;
+            projectsDiv.appendChild(card);
+        });
+    </script>
+</body>
+</html>
