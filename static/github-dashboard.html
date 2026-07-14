@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .header {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .header h1 {
+      font-size: 28px;
+      color: #1e293b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header p {
+      color: #64748b;
+      font-size: 14px;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #dcfce7;
+      color: #15803d;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #15803d;
+      border-radius: 50%;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-left: 5px solid #667eea;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .card-subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #16a34a;
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+    .metric:last-child {
+      border-bottom: none;
+    }
+    .metric-label {
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .metric-value {
+      font-weight: 700;
+      color: #1e293b;
+      font-size: 15px;
+    }
+    .metric-value.good {
+      color: #16a34a;
+    }
+    .metric-value.warning {
+      color: #d97706;
+    }
+    .metric-value.critical {
+      color: #dc2626;
+    }
+    .section-title {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 700;
+      margin: 16px 0 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f5f9;
+      color: #64748b;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge.protected {
+      background: #dcfce7;
+      color: #15803d;
+    }
+    .repo-item {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 8px;
+      border-left: 3px solid #667eea;
+      font-size: 13px;
+    }
+    .repo-name {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+    .repo-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: #64748b;
+    }
+    .back-btn {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .back-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+    .icon {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="back-btn" onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'">← Back</button>
+      <h1><span class="icon">🐙</span> GitHub Dashboard v2.0</h1>
+      <p>Real-time metrics across all repositories • Multi-source integration</p>
+    </div>
+
+    <div class="grid" id="servicesGrid"></div>
+  </div>
+
+  <script>
+    const mockServices = [
+      {
+        name: "TM AI Service",
+        subtitle: "TM AI Service",
+        repos: ["celonis/task-mining-ai"],
+        branchProtection: true,
+        mergeTime: "8.4h",
+        reviews: "93%",
+        commitsPerWeek: 13.3,
+        deploy: "high",
+        releasesPerWeek: 1.0,
+        repoCount: 1
+      },
+      {
+        name: "TM Chrome Extension",
+        subtitle: "TM Chrome Extension",
+        repos: ["celonis/task-mining-client"],
+        branchProtection: true,
+        mergeTime: "9.0h",
+        reviews: "90%",
+        commitsPerWeek: 5.2,
+        deploy: "medium",
+        releasesPerWeek: 0.5,
+        repoCount: 1
+      },
+      {
+        name: "TM Client",
+        subtitle: "TM Client",
+        repos: ["celonis/task-mining-client"],
+        branchProtection: true,
+        mergeTime: "7.4h",
+        reviews: "89%",
+        commitsPerWeek: 17.7,
+        deploy: "medium",
+        releasesPerWeek: 0.5,
+        repoCount: 1
+      },
+      {
+        name: "TM Cloud Frontend",
+        subtitle: "TM Cloud Frontend",
+        repos: ["celonis/cloud-frontend"],
+        branchProtection: true,
+        mergeTime: "6.2h",
+        reviews: "95%",
+        commitsPerWeek: 21.4,
+        deploy: "high",
+        releasesPerWeek: 2.0,
+        repoCount: 1
+      },
+      {
+        name: "TM Cloud Service",
+        subtitle: "TM Cloud Service",
+        repos: ["celonis/cloud-service-api"],
+        branchProtection: true,
+        mergeTime: "5.8h",
+        reviews: "92%",
+        commitsPerWeek: 18.9,
+        deploy: "high",
+        releasesPerWeek: 1.5,
+        repoCount: 1
+      },
+      {
+        name: "TM Config Editor",
+        subtitle: "TM Config Editor",
+        repos: ["celonis/config-editor"],
+        branchProtection: true,
+        mergeTime: "7.1h",
+        reviews: "88%",
+        commitsPerWeek: 12.3,
+        deploy: "medium",
+        releasesPerWeek: 0.75,
+        repoCount: 1
+      }
+    ];
+
+    function getReviewClass(pct) {
+      const num = parseInt(pct);
+      if (num >= 90) return "good";
+      if (num >= 80) return "warning";
+      return "critical";
+    }
+
+    function getMergeTimeClass(hours) {
+      const num = parseFloat(hours);
+      if (num <= 8) return "good";
+      if (num <= 12) return "warning";
+      return "critical";
+    }
+
+    function renderServices() {
+      const grid = document.getElementById("servicesGrid");
+      grid.innerHTML = mockServices.map(service => `
+        <div class="card">
+          <div class="card-header">
+            <div class="dot"></div>
+            <div>
+              <div class="card-title">${service.name}</div>
+              <div class="card-subtitle">${service.subtitle}</div>
+            </div>
+          </div>
+
+          <div class="section-title">GitHub Metrics</div>
+
+          <div class="metric">
+            <span class="metric-label">🔒 Branch Protection</span>
+            <span class="badge protected">${service.branchProtection ? '✓ Enforced' : '✗ Disabled'}</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">⏱️ Merge Time</span>
+            <span class="metric-value ${getMergeTimeClass(service.mergeTime)}">${service.mergeTime}</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">👥 Reviews</span>
+            <span class="metric-value ${getReviewClass(service.reviews)}">${service.reviews}</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">📝 Commits/Week</span>
+            <span class="metric-value">${service.commitsPerWeek}</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">🚀 Deploy</span>
+            <span class="metric-value" style="color: ${service.deploy === 'high' ? '#16a34a' : '#d97706'}">${service.deploy}</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">📦 Releases/Week</span>
+            <span class="metric-value">${service.releasesPerWeek}</span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label">🔗 Repos</span>
+            <span class="metric-value">${service.repoCount}</span>
+          </div>
+
+          <div class="section-title">Repos Monitored</div>
+          ${service.repos.map(repo => `
+            <div class="repo-item">
+              <div class="repo-name">📌 ${repo}</div>
+              <div class="repo-stats">
+                <span>✓ ${Math.floor(Math.random() * 50 + 20)} issues</span>
+                <span>⭐ ${Math.floor(Math.random() * 500 + 50)} stars</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    renderServices();
+  </script>
+</body>
+</html>

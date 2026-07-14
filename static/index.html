@@ -153,18 +153,13 @@ const TIERS={
  GREEN:{label:"Green — Growth System",color:"#16a34a",desc:"All gates clear."},
  AMBER:{label:"Amber — Conditional",color:"#d97706",desc:"A few standard gaps remain."},
  DEFERRED:{label:"Deferred",color:"#64748b",desc:"Too many open standard gaps."}};
-// Window values are in DAYS (weeks/months expressed as day counts) so we can
-// support sub-month windows like 1–2 weeks for recent-incident triage.
 const WINDOWS = [
-  {v: 7,   label:"Last 1 week"},
-  {v: 14,  label:"Last 2 weeks"},
-  {v: 30,  label:"Last 1 month"},
-  {v: 90,  label:"Last 3 months"},
-  {v: 180, label:"Last 6 months"},
-  {v: 365, label:"Last 12 months"},
-  {v: 0,   label:"All time"},
+  {v: 3,  label:"Last 3 months"},
+  {v: 6,  label:"Last 6 months"},
+  {v: 12, label:"Last 12 months"},
+  {v: 0,  label:"All time"},
 ];
-let STATE = { view: "landing", project: null, window: 180, curService: 0, jiraProjects: null, report: null, alerts: null, error: null, topPage: 0, ddScope: "prod" };
+let STATE = { view: "landing", project: null, window: 6, curService: 0, jiraProjects: null, report: null, error: null };
 
 function parseHash(){
   const h = location.hash.replace(/^#/, "");
@@ -172,7 +167,7 @@ function parseHash(){
   const m = h.match(/^\/project\/([^\/?]+)(?:\?(.+))?/);
   if(m){
     const params = new URLSearchParams(m[2] || "");
-    return { view: "project", project: m[1], window: +(params.get("w") || 180) };
+    return { view: "project", project: m[1], window: +(params.get("w") || 6) };
   }
   return { view: "landing" };
 }
@@ -184,7 +179,7 @@ function navigate(state){
 async function loadPortfolio(){
   STATE.portfolio = null; STATE.error = null; render();
   try{
-    const r = await fetch(`/api/overview?window_days=${STATE.window}`);
+    const r = await fetch(`/api/overview?window_months=${STATE.window}`);
     if(!r.ok){ STATE.error = `HTTP ${r.status}: ${(await r.text()).slice(0,300)}`; render(); return; }
     STATE.portfolio = await r.json();
   }catch(e){ STATE.error = e.message; }
@@ -192,29 +187,14 @@ async function loadPortfolio(){
 }
 
 async function loadReport(){
-  STATE.report = null; STATE.error = null; STATE.notRegistered = false; STATE.alerts = null; render();
+  STATE.report = null; STATE.error = null; STATE.notRegistered = false; render();
   try{
-    const r = await fetch(`/api/report/${encodeURIComponent(STATE.project)}?window_days=${STATE.window}`);
+    const r = await fetch(`/api/report/${encodeURIComponent(STATE.project)}?window_months=${STATE.window}`);
     if(r.status === 404){ STATE.notRegistered = true; render(); return; }
     if(!r.ok){ STATE.error = `HTTP ${r.status}: ${(await r.text()).slice(0,300)}`; render(); return; }
     STATE.report = await r.json();
   }catch(e){ STATE.error = e.message; }
   render();
-  loadAlerts();   // fire-and-forget: Datadog alert history loads in the background
-}
-
-async function loadAlerts(){
-  const proj = STATE.project;
-  STATE.alerts = null;
-  STATE.topPage = 0;
-  STATE.ddScope = "prod";
-  const wdays = STATE.window > 0 ? Math.min(STATE.window, 180) : 180;
-  try{
-    const r = await fetch(`/api/datadog/alerts/${encodeURIComponent(proj)}?window_days=${wdays}&limit=30`);
-    if(proj !== STATE.project) return;   // user navigated away; ignore stale result
-    STATE.alerts = r.ok ? await r.json() : { error: `HTTP ${r.status}: ${(await r.text()).slice(0,200)}` };
-  }catch(e){ STATE.alerts = { error: e.message }; }
-  if(proj === STATE.project) render();
 }
 
 // ============================ LANDING (onboarding portfolio) ============================
@@ -257,7 +237,7 @@ function renderLanding(){
       const t = TIERS[p.tier];
       const pv = p.project_view || {};
       const tot = pv.tickets?.total;
-      const wLabel = (WINDOWS.find(w=>w.v===(p.window_days||0))||{}).label || "";
+      const wLabel = (WINDOWS.find(w=>w.v===(p.window_days?Math.round(p.window_days/30):0))||{}).label || "";
       return `<div class="projrow" onclick="pickProject('${p.key}')" style="padding:20px;gap:20px">
         <span class="pill" style="background:${t.color};font-size:11px;padding:5px 12px">${p.tier}</span>
         <div style="flex:1">
@@ -587,10 +567,6 @@ function renderProject(){
       <summary>📊 Overall Project Health <span class="chip">Jira ${p.key} + CBE · in window</span></summary>
       <div class="expand-body">${projectProductBlock(p)}</div>
     </details>
-    <details class="expand" open>
-      <summary>🔔 Datadog reliability <span class="chip">health verdict · trends · exposure · ownership</span></summary>
-      <div class="expand-body">${datadogAlertsSection(p)}</div>
-    </details>
     <details class="expand">
       <summary>🧠 Analytical insights <span class="chip">${insightsCount} finding${insightsCount!==1?'s':''} · for deeper review</span></summary>
       <div class="expand-body">${insightsSection(p)}</div>
@@ -604,208 +580,6 @@ function renderProject(){
 
   document.getElementById("content").innerHTML = execLayer + detailedLayer + `<div style="height:40px"></div>` + `<div style="display:none">${renderStrip(p)}${projectSidebar(p)}</div>
   </div>`;
-}
-
-// ============================ Datadog alerts panel ============================
-function _esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function _ago(ts){
-  if(!ts) return '—';
-  const s = Date.now()/1000 - ts;
-  if(s < 0) return 'just now';
-  const d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60);
-  if(d>0) return `${d}d ago`;
-  if(h>0) return `${h}h ago`;
-  return `${m||1}m ago`;
-}
-function _dur(h){
-  if(h==null) return '—';
-  if(h < 1) return `${Math.round(h*60)}m`;
-  if(h < 24) return `${h.toFixed(1)}h`;
-  return `${(h/24).toFixed(1)}d`;
-}
-function datadogAlertsSection(p){
-  const a = STATE.alerts;
-  if(a==null) return `<div class="loading">Loading Datadog alert history…</div>`;
-  if(a.error) return `<div class="unavailable">Datadog alerts unavailable — ${_esc(a.error)}</div>`;
-  const configured = (a.services||[]).some(s=>s.configured);
-  if(!configured) return `<div class="notconfig">No Datadog service tags configured for this project's services.</div>`;
-  return datadogVPStrip(a) + datadogOpsDetail(a);
-}
-
-// ---- VP view: one-line verdict + 4 leadership cards with prior-window trend ---
-function _effScope(a){
-  // Honour the toggle, but fall back to all-envs when a project has no
-  // production alerts (so the default 'prod' view is never empty).
-  return (STATE.ddScope === "prod" && (a.vp||{}).has_prod) ? "prod" : "all";
-}
-function _scopedVP(a){
-  const vp = a.vp || {};
-  const scope = _effScope(a);
-  return { scope, cur: vp[scope] || {}, prev: vp[scope + "_prev"] || {} };
-}
-function _scopedTop(a){
-  const top = a.top || [];
-  return _effScope(a) === "prod" ? top.filter(t => t.is_prod === true) : top;
-}
-function _pctDelta(cur, prev, lowerBetter){
-  if(cur==null || prev==null || prev===0) return `<span style="color:#cbd5e1;font-size:11px">no prior data</span>`;
-  const d = Math.round((cur-prev)/prev*100);
-  if(d===0) return `<span style="color:#94a3b8;font-size:11px">±0% vs prior</span>`;
-  const up = d>0, good = lowerBetter ? !up : up;
-  const col = good ? '#16a34a' : '#dc2626';
-  return `<span style="color:${col};font-size:11px;font-weight:800">${up?'▲':'▼'} ${Math.abs(d)}%</span> <span style="color:#94a3b8;font-size:11px">vs prior ${a_wd()}d</span>`;
-}
-let _WD = 0; function a_wd(){ return _WD; }
-function _vpCard(v, k, sub, vcolor){
-  return `<div class="card"><div class="v" style="${vcolor?`color:${vcolor}`:''}">${v}</div>
-    <div class="k">${k}</div><div style="margin-top:6px;min-height:16px">${sub||''}</div></div>`;
-}
-function datadogVPStrip(a){
-  const {scope, cur, prev} = _scopedVP(a);
-  _WD = a.window_days;
-  const open = cur.still_open||0, openP = cur.open_p1p2||0;
-  const ownPct = cur.monitors_fired ? Math.round(100*cur.unowned_monitors/cur.monitors_fired) : 0;
-
-  let tier = 'GREEN';
-  if(openP>0) tier='RED'; else if(open>0 || ownPct>=50) tier='AMBER';
-  const tcol = {GREEN:'#16a34a',AMBER:'#d97706',RED:'#dc2626'}[tier];
-  const tlabel = {GREEN:'Healthy',AMBER:'Watch',RED:'At risk'}[tier];
-  const scopeLabel = scope==='prod' ? 'production' : 'all environments';
-
-  const bits = [];
-  bits.push(`<b>${open}</b> alert${open!==1?'s':''} open`);
-  bits.push(`<b style="color:${openP>0?'#dc2626':'inherit'}">${openP}</b> P1/P2`);
-  if(cur.mttr_hours_median!=null) bits.push(`median resolution <b>${_dur(cur.mttr_hours_median)}</b>`);
-  bits.push(`<b style="color:${ownPct>=50?'#d97706':'inherit'}">${ownPct}%</b> of firing monitors unowned`);
-
-  const verdict = `<div style="display:flex;align-items:center;gap:14px;background:${tcol}12;border:1px solid ${tcol}44;border-left:5px solid ${tcol};border-radius:12px;padding:14px 18px">
-    <span style="width:12px;height:12px;border-radius:50%;background:${tcol};flex:none;box-shadow:0 0 0 4px ${tcol}22"></span>
-    <div style="flex:1">
-      <div style="font-weight:800;font-size:15px;color:#1f2937">${_esc(a.name||'Service')} reliability (${scopeLabel}) · <span style="color:${tcol}">${tlabel}</span></div>
-      <div style="font-size:12.5px;color:#475569;margin-top:3px">${bits.join(' · ')}</div>
-    </div>
-    ${(()=>{const u=(a.services||[]).map(s=>s.manage_url).find(Boolean);return u?`<a href="${u}" target="_blank" rel="noopener" style="flex:none;text-decoration:none;border:1px solid ${tcol};background:#fff;color:${tcol};border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;white-space:nowrap">Open in Datadog ↗</a>`:'';})()}
-  </div>`;
-
-  const hasProd = (a.vp||{}).has_prod;
-  const seg = (val,label)=>`<button onclick="STATE.ddScope='${val}';STATE.topPage=0;render()"
-    style="border:1px solid #cbd5e1;background:${STATE.ddScope===val?'#1f3864':'#fff'};color:${STATE.ddScope===val?'#fff':'#475569'};
-    padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;${val==='all'?'border-radius:8px 0 0 8px':'border-radius:0 8px 8px 0;border-left:none'}">${label}</button>`;
-  const toggle = hasProd ? `<div style="display:flex;justify-content:flex-end;margin-top:12px">
-      <div style="display:flex">${seg('all','All environments')}${seg('prod','Production only')}</div>
-    </div>` : '';
-
-  const cards = `<div class="cards" style="margin-top:12px">
-    ${_vpCard(open, 'Open now', `${openP} P1/P2 · still firing`, open? (openP>0?'#dc2626':'#d97706') : '#16a34a')}
-    ${_vpCard(cur.triggered||0, `Alerts fired (${a.window_days}d)`, _pctDelta(cur.triggered, prev.triggered, true))}
-    ${_vpCard(_dur(cur.mttr_hours_median), 'Median resolution', `${_pctDelta(cur.mttr_hours_median, prev.mttr_hours_median, true)}${cur.mttr_p1p2_median!=null?` · P1/P2 ${_dur(cur.mttr_p1p2_median)}`:''}`)}
-    ${_vpCard(`${cur.unowned_monitors||0}<span style="font-size:15px;color:#94a3b8">/${cur.monitors_fired||0}</span>`, 'Monitors unowned', `${ownPct}% no team · ${cur.noise_pct==null?'—':cur.noise_pct+'% '}auto-cleared &lt;5m`, ownPct>=50?'#d97706':null)}
-  </div>`;
-
-  const caveat = `<div style="font-size:11px;color:#94a3b8;margin-top:10px;line-height:1.6">
-    "Resolution" is monitor <b>auto-recovery time</b> (trigger → recover), not incident-tool MTTR. "Unowned" = firing monitors with no Slack/PagerDuty/on-call notification target. Trends compare the current ${a.window_days}d against the prior ${a.window_days}d.
-  </div>`;
-
-  return verdict + toggle + cards + caveat;
-}
-function datadogOpsDetail(a){
-  const n = _scopedTop(a).length;
-  return `<details style="margin-top:20px;border-top:1px solid #eef1f7;padding-top:14px">
-    <summary style="cursor:pointer;font-size:13px;color:#475569;font-weight:700;list-style:none">▸ Operational detail — top alerts (${n})</summary>
-    <div style="margin-top:10px"><div id="topAlertsWrap">${topAlertsInner(a)}</div></div>
-  </details>`;
-}
-
-// Top alerts: open, resolved-manually, or occurring frequently — ranked by
-// priority (P1 first), paginated 10 per page, with owner + any comments.
-const TOP_PAGE_SIZE = 10;
-function _ownerChips(owners, comments){
-  const chips = [];
-  (owners||[]).slice(0,3).forEach(o=>{
-    const h = String(o||'');
-    const col = /^slack-/i.test(h) ? '#4a154b'
-              : /pagerduty|opsgenie|oncall/i.test(h) ? '#c2410c'
-              : /@/.test(h) ? '#1f3864' : '#334155';
-    chips.push(`<span class="badge" style="background:#f1f5f9;color:${col};margin:1px 2px 1px 0">@${_esc(h.replace(/^@/,''))}</span>`);
-  });
-  (comments||[]).slice(0,3).forEach(c=>{
-    const who = c.who ? '@'+_esc(String(c.who).replace(/^@/,'')) : 'comment';
-    const tip = c.text ? ` title="${_esc(c.text)}"` : '';
-    chips.push(`<span class="badge" style="background:#ecfdf5;color:#065f46;margin:1px 2px 1px 0"${tip}>comment · ${who}</span>`);
-  });
-  return chips.length ? chips.join("") : `<span style="color:#cbd5e1">—</span>`;
-}
-function gotoTopPage(delta){
-  const a = STATE.alerts; if(!a) return;
-  const n = _scopedTop(a).length;
-  const pages = Math.max(1, Math.ceil(n / TOP_PAGE_SIZE));
-  STATE.topPage = Math.min(pages-1, Math.max(0, (STATE.topPage||0) + delta));
-  const wrap = document.getElementById("topAlertsWrap");
-  if(wrap) wrap.innerHTML = topAlertsInner(a);
-}
-function topAlertsInner(a){
-  const all = _scopedTop(a);
-  const reasonBadge = {
-    open:     `<span class="badge err">OPEN</span>`,
-    manual:   `<span class="badge" style="background:#e0e7ff;color:#3730a3">Manual&nbsp;resolve</span>`,
-    frequent: `<span class="badge" style="background:#fef3c7;color:#92400e">Frequent</span>`,
-  };
-  const pages = Math.max(1, Math.ceil(all.length / TOP_PAGE_SIZE));
-  const page = Math.min(STATE.topPage||0, pages-1);
-  const start = page * TOP_PAGE_SIZE;
-  const slice = all.slice(start, start + TOP_PAGE_SIZE);
-  const rows = slice.map((t,i)=>{
-    const pc = (t.priority<=2)?'#dc2626':(t.priority==3)?'#d97706':'#64748b';
-    const nm = t.monitor_url
-      ? `<a href="${t.monitor_url}" target="_blank" rel="noopener" style="color:#1f3864;text-decoration:none;font-weight:600">${_esc(t.name)} ↗</a>`
-      : `<span style="font-weight:600">${_esc(t.name)}</span>`;
-    const reasons = (t.reasons||[]).map(r=>reasonBadge[r]||'').join(' ');
-    return `<tr style="border-top:1px solid #eef1f7">
-      <td style="padding:8px;text-align:center;color:#94a3b8;font-variant-numeric:tabular-nums">${start+i+1}</td>
-      <td style="padding:8px;text-align:center"><span class="pill" style="background:${pc}">P${t.priority??'?'}</span></td>
-      <td style="padding:8px">${nm}<div style="font-size:11px;color:#94a3b8">${_esc(t.service||'')}</div></td>
-      <td style="padding:8px">${reasons}</td>
-      <td style="padding:8px;text-align:center;font-variant-numeric:tabular-nums">${t.count||0}</td>
-      <td style="padding:8px;text-align:center;font-variant-numeric:tabular-nums">${t.open_count||0} <span style="color:#cbd5e1">/</span> ${t.manual_resolved||0} <span style="color:#cbd5e1">/</span> ${t.auto_resolved||0}</td>
-      <td style="padding:8px;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums">${_dur(t.mttr_hours_median)}</td>
-      <td style="padding:8px;white-space:nowrap;color:#475569">${_ago(t.last_triggered)}</td>
-      <td style="padding:8px;line-height:1.9">${_ownerChips(t.owners, t.comments)}</td>
-    </tr>`;
-  }).join("");
-  const table = `<table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:13px">
-    <thead><tr style="text-align:left;color:#64748b;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em">
-      <th style="padding:6px 8px;text-align:center">#</th>
-      <th style="padding:6px 8px;text-align:center">Pri</th>
-      <th style="padding:6px 8px">Alert / monitor</th>
-      <th style="padding:6px 8px">Why it's here</th>
-      <th style="padding:6px 8px;text-align:center">Fires</th>
-      <th style="padding:6px 8px;text-align:center">Open&nbsp;/&nbsp;Man&nbsp;/&nbsp;Auto</th>
-      <th style="padding:6px 8px;text-align:center">Median&nbsp;resolution&nbsp;time</th>
-      <th style="padding:6px 8px">Last&nbsp;fired</th>
-      <th style="padding:6px 8px">Owner&nbsp;/&nbsp;notified</th>
-    </tr></thead>
-    <tbody>${rows || `<tr><td colspan="9" style="padding:14px;color:#94a3b8">No open, manually-resolved, or frequently-firing alerts in this window.</td></tr>`}</tbody>
-  </table>`;
-  const from = all.length ? start+1 : 0;
-  const to = Math.min(start + TOP_PAGE_SIZE, all.length);
-  const pgBtn = (label, delta, disabled)=>{
-    const base = "border:1px solid #cbd5e1;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;";
-    const on = "background:#1f3864;color:#fff;cursor:pointer;";
-    const off = "background:#f1f5f9;color:#cbd5e1;cursor:not-allowed;";
-    return `<button ${disabled?'disabled':''} onclick="gotoTopPage(${delta})" style="${base}${disabled?off:on}">${label}</button>`;
-  };
-  const pager = `<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px;color:#64748b">
-    <span>Showing <b>${from}\u2013${to}</b> of <b>${all.length}</b> · page ${page+1}/${pages}</span>
-    <span style="display:flex;gap:8px">
-      ${pgBtn('← Prev', -1, page<=0)}
-      ${pgBtn('Next 10 →', 1, page>=pages-1)}
-    </span>
-  </div>`;
-  const note = `<div style="font-size:11px;color:#94a3b8;margin-top:8px;line-height:1.6">
-    Ranked by <b>priority</b> (P1 → P2 → P3 …), then attention (currently <b>open</b> &gt; <b>manually resolved</b> &gt; <b>frequently firing</b>, &ge;3 fires in window).
-    <b>Owner / notified</b> comes from each monitor's notification handles (Slack channel, PagerDuty, on-call, email) or its creator; green <i>comment</i> chips are human comments posted on the alert (hover for text). Datadog monitor alerts have no per-alert assignee field.
-  </div>`;
-  return table + pager + note;
 }
 
 function renderStrip(p){
@@ -826,7 +600,7 @@ function projectHeader(p){
 
 // -------- Executive recommendation logic --------
 function windowLabelFor(p){
-  return (WINDOWS.find(w=>w.v===(p.window_days||0))||{}).label || "All time";
+  return (WINDOWS.find(w=>w.v===(p.window_days?Math.round(p.window_days/30):0))||{}).label || "All time";
 }
 function computeRecommendation(p){
   const critCount = p.rollup.critical_gaps_total;
@@ -1636,10 +1410,7 @@ function serviceDetail(s){
     if(src.datadog==="not_configured") return `<div class="notconfig">Datadog not configured.</div>`;
     if(src.datadog!=="ok") return `<div class="unavailable">Datadog unavailable — ${src.datadog}</div>`;
     const d=s.datadog;
-    const link=(url,label)=> url? `<a href="${url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:2px">${label} ↗</a>` : label;
-    const monVal = d.monitors_url ? link(d.monitors_url, d.monitors) : d.monitors;
-    const alertVal = (d.alerting>0 && d.alerting_url) ? link(d.alerting_url, d.alerting) : d.alerting;
-    return `<div>${kv("Active monitors",monVal)}${kv("Muted",d.muted,d.muted>3?'warn':'good')}${kv("Alerting now",alertVal,d.alerting>0?'warn':'good')}</div>`;
+    return `<div>${kv("Active monitors",d.monitors)}${kv("Muted",d.muted,d.muted>3?'warn':'good')}${kv("Alerting now",d.alerting,d.alerting>0?'warn':'good')}</div>`;
   }
   const t=TIERS[s.tier];
   const gaps=[...s.gates.critical_gaps.map(g=>["crit",g]), ...s.gates.standard_gaps.map(g=>["std",g])];
@@ -1650,7 +1421,7 @@ function serviceDetail(s){
     <span class="why">Jira scope: <code>${s.jira_scope||'(none)'}</code> &nbsp;·&nbsp; Jira ${srcBadge(src.jira)} GitHub ${srcBadge(src.github)} Datadog ${srcBadge(src.datadog)}</span></div>
     <div class="section"><h3>Ticket health (Jira, scoped to this service)</h3>${jiraSection()}</div>
     <div class="section"><h3>Code &amp; pipeline</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-      <div><div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:6px">GITHUB</div>${ghSection()}</div>
+      <div><div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:6px"><a href="github-dashboard.html" target="_blank" rel="noopener" style="color:#94a3b8;text-decoration:none;display:inline-block;cursor:pointer">GITHUB</a></div>${ghSection()}</div>
       <div><div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:6px">DATADOG</div>${ddSection()}</div></div></div>
     <div class="section"><h3>Gate scoring → service decision</h3><div class="gatebox">
       ${s.gates.insufficient_jira ? `<div class="unavailable" style="margin-bottom:12px">
